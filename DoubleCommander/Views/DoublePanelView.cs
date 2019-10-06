@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DoubleCommander.Common;
+using DoubleCommander.Resources;
 using NConsoleGraphics;
 
 namespace DoubleCommander.Views
@@ -12,31 +9,17 @@ namespace DoubleCommander.Views
         private ListView _leftView;
         private ListView _rightView;
 
-        public ListView LeftView {
-            get => _leftView;
-            set
-            {
-                _leftView = value;
-                _leftView.Parent = this;
-                _leftView.Position = new Point(0 + 5, 0 + 5);
-                _leftView.Size = new Size(Size.Height - 10, Size.Width / 2 - 10);
-            }
-        }
-        public ListView RightView {
-            get => _rightView; 
-            set
-            {
-                _rightView = value;
-                _rightView.Parent = this;
-                _rightView.Position = new Point(Size.Width/2 + 5, 0 + 5);
-                _rightView.Size = new Size(Size.Height - 10, Size.Width / 2 - 10);
-            }
-        }
-
-        public DoublePanelView(Point position, Size size)
+        public DoublePanelView(Point position, Size size, View parent = null)
+            : base(position, size, parent)
         {
-            Position = position;
-            Size = size;
+            _leftView = new ListView(new Point(0 + NumericConstants.MarginUpLeft, 0 + NumericConstants.MarginUpLeft),
+               new Size(Size.Height - NumericConstants.MarginRightDown, Size.Width / 2 - NumericConstants.MarginRightDown), this);
+            _rightView = new ListView(new Point(Size.Width / 2 + NumericConstants.MarginUpLeft, 0 + NumericConstants.MarginUpLeft),
+                new Size(Size.Height - NumericConstants.MarginRightDown, Size.Width / 2 - NumericConstants.MarginRightDown),
+                this)
+            { Enabled = false };
+            EventsSender.Subscribe(_leftView);
+            EventsSender.Subscribe(_rightView);
         }
 
         public override void OnKeyDown(Keys key)

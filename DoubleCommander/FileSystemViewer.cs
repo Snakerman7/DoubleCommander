@@ -1,6 +1,8 @@
-﻿using System.Linq;
-using System.IO;
+﻿using DoubleCommander.Resources;
 using GenericCollections;
+using System;
+using System.IO;
+using System.Linq;
 
 namespace DoubleCommander
 {
@@ -14,6 +16,7 @@ namespace DoubleCommander
         public FileSystemViewer()
         {
             CurrentPath = string.Empty;
+            UpdateItems();
         }
 
         private void UpdateItems()
@@ -29,23 +32,23 @@ namespace DoubleCommander
         {
             if (CurrentPath != string.Empty)
             {
-                return new FileSystemItem[] { new FileSystemItem("..", "","") }
+                return new FileSystemItem[] { new FileSystemItem(StringResources.BackPath, FileSystemItemType.Directory) }
                 .Concat(Directory.GetDirectories(CurrentPath)
                                 .Select(path => new DirectoryInfo(path))
-                                .Select(dir => new FileSystemItem(dir.Name, "", "<DIR>")))
+                                .Select(dir => new FileSystemItem(dir.Name, FileSystemItemType.Directory,string.Empty, StringResources.DirectoryMark)))
                 .Concat(Directory.GetFiles(CurrentPath)
                                 .Select(path => new FileInfo(path))
-                                .Select(file => new FileSystemItem(file.Name, file.Length.ToString("N"), file.Extension)));
+                                .Select(file => new FileSystemItem(file.Name, FileSystemItemType.File, BytesToString(file.Length), file.Extension)));
             }
             else
             {
-                return DriveInfo.GetDrives().Where(d => d.IsReady).Select(d => new FileSystemItem(d.Name, "", ""));
+                return DriveInfo.GetDrives().Where(d => d.IsReady).Select(d => new FileSystemItem(d.Name, FileSystemItemType.Drive));
             }
         }
 
         public void GoToFolder(string name)
         {
-            if (name == "..")
+            if (name == StringResources.BackPath)
             {
                 if (Path.GetPathRoot(CurrentPath) != CurrentPath)
                 {
@@ -61,6 +64,16 @@ namespace DoubleCommander
                 CurrentPath = Path.Combine(CurrentPath, name);
             }
             UpdateItems();
+        }
+
+        private static string BytesToString(long byteCount)
+        {
+            if (byteCount == 0)
+                return "0" + StringResources.FileSizeUnits[0];
+            long bytes = Math.Abs(byteCount);
+            int place = Convert.ToInt32(Math.Floor(Math.Log(bytes, 1024)));
+            double num = Math.Round(bytes / Math.Pow(1024, place), 1);
+            return (Math.Sign(byteCount) * num).ToString() + StringResources.FileSizeUnits[place];
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DoubleCommander.Common;
+using DoubleCommander.Resources;
 using NConsoleGraphics;
 
 namespace DoubleCommander.Views
@@ -17,14 +18,13 @@ namespace DoubleCommander.Views
 
         public void Draw(ConsoleGraphics graphics, Point position, Size size)
         {
-            uint textColor = 0xffffffff;
+            uint textColor = ColorResources.ListItemTextColor;
             if (_parent.Enabled && Selected)
             {
-                graphics.FillRectangle(0xff00bbbb, position.X, position.Y, size.Width, size.Height);
-                textColor = 0xff000000;
+                graphics.FillRectangle(ColorResources.ListItemBackgroundColor, position.X, position.Y, size.Width, size.Height);
+                textColor = ColorResources.ListItemSelectedTextColor;
             }
-
-            graphics.DrawString(Text, "Consolas", textColor, position.X, position.Y, 10);
+            graphics.DrawString(Text, StringResources.FontName, textColor, position.X, position.Y, NumericConstants.FontSize);
         }
     }
 }

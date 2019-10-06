@@ -1,20 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DoubleCommander
+﻿namespace DoubleCommander
 {
+    public enum FileSystemItemType
+    {
+        Drive,
+        Directory,
+        File
+    }
+
     public class FileSystemItem
     {
         public string Name { get; }
         public string Size { get; }
         public string Extension { get; }
+        public FileSystemItemType Type { get; }
 
-        public FileSystemItem(string name, string size, string extension)
+        public FileSystemItem(string name, FileSystemItemType type, string size = "", string extension = "")
         {
             Name = name;
+            Type = type;
             Size = size;
             Extension = extension;
         }

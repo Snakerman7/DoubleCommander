@@ -1,8 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Threading;
-using NConsoleGraphics;
+﻿using DoubleCommander.Resources;
 using DoubleCommander.Views;
+using NConsoleGraphics;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace DoubleCommander
 {
@@ -48,7 +49,7 @@ namespace DoubleCommander
         {
             while (_working)
             {
-                Graphics.FillRectangle(0xFFffffff, 0, 0, Graphics.ClientWidth, Graphics.ClientHeight);
+                Graphics.FillRectangle(ColorResources.AppBackground, 0, 0, Graphics.ClientWidth, Graphics.ClientHeight);
                 PaintEventHandler.Invoke(Graphics);
                 Graphics.FlipPages();
                 Thread.Sleep(100);
