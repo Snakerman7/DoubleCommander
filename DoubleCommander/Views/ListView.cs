@@ -16,7 +16,7 @@ namespace DoubleCommander.Views
         private readonly List<ListViewItem> _items = new List<ListViewItem>();
         private int _visibleItemsFirstIndex = 0;
         private readonly int _visibleItemsCount;
-        private int _selectedIndex = 0;
+        public int SelectedIndex { get; private set; } = 0;
         private readonly object _locker = new object();
         private Point _itemsStartPosition;
         public FileSystemViewer FSViewer { get; } = new FileSystemViewer();
@@ -25,14 +25,14 @@ namespace DoubleCommander.Views
             : base(position, size, parent)
         {
             _itemsStartPosition = new Point(position.X, Position.Y + NumericConstants.ListViewItemHeight);
-            _visibleItemsCount = (Size.Height - NumericConstants.ListViewItemHeight*3) / NumericConstants.ListViewItemHeight;
+            _visibleItemsCount = (Size.Height - NumericConstants.ListViewItemHeight * 3) / NumericConstants.ListViewItemHeight;
             var names = FSViewer.Items.ToArray();
             int count = names.Length > _visibleItemsCount ? _visibleItemsCount : names.Length;
             for (int i = 0; i < names.Length; i++)
             {
                 _items.Add(new ListViewItem(this, names[i].Name));
             }
-            _items[_selectedIndex].Selected = true;
+            _items[SelectedIndex].Selected = true;
         }
 
         public override void OnPaint(ConsoleGraphics g)
@@ -58,7 +58,7 @@ namespace DoubleCommander.Views
                                     Position.X + Size.Width, Size.Height - NumericConstants.ListViewItemHeight, 2);
             g.DrawString(FSViewer.CurrentPath, StringResources.FontName, ColorResources.ListItemTextColor,
                 Position.X, Position.Y, NumericConstants.FontSize);
-            g.DrawString($"{_selectedIndex + 1}/{_items.Count}", StringResources.FontName, ColorResources.ListItemTextColor,
+            g.DrawString($"{SelectedIndex + 1}/{_items.Count}", StringResources.FontName, ColorResources.ListItemTextColor,
                 Position.X + 22, Size.Height - NumericConstants.ListViewItemHeight + 3, NumericConstants.FontSize);
         }
 
@@ -66,75 +66,83 @@ namespace DoubleCommander.Views
         {
             if (Enabled)
             {
-                if (key == Keys.DOWN && _selectedIndex < _items.Count - 1)
+                if (key == Keys.DOWN && SelectedIndex < _items.Count - 1)
                 {
                     Move(MoveDirection.Down);
                 }
-                else if (key == Keys.UP && _selectedIndex > 0)
+                else if (key == Keys.UP && SelectedIndex > 0)
                 {
                     Move(MoveDirection.Up);
                 }
                 if (key == Keys.RETURN)
                 {
-                    if (FSViewer.Items[_selectedIndex].Type != FileSystemItemType.File)
+                    if (FSViewer.Items[SelectedIndex].Type != FileSystemItemType.File)
                     {
-                        lock (_locker)
-                        {
-                            string name = FSViewer.Items[_selectedIndex].Name;
-                            FSViewer.GoToFolder(name);
-                            Update();
-                        }
+                        string name = FSViewer.Items[SelectedIndex].Name;
+                        FSViewer.GoToFolder(name);
+                        Update();
                     }
                 }
                 if (key == Keys.BACK)
                 {
                     if (FSViewer.CurrentPath != string.Empty)
                     {
-                        lock (_locker)
-                        {
-                            string name = StringResources.BackPath;
-                            FSViewer.GoToFolder(name);
-                            Update();
-                        }
+                        string name = StringResources.BackPath;
+                        FSViewer.GoToFolder(name);
+                        Update();
                     }
                 }
             }
         }
 
+        public override void OnUpdate()
+        {
+            UpdateItems();
+        }
+
         private void Move(MoveDirection direction)
         {
-            _items[_selectedIndex].Selected = !_items[_selectedIndex].Selected;
-            _selectedIndex += (int)direction;
-            _items[_selectedIndex].Selected = !_items[_selectedIndex].Selected;
-            if (direction == MoveDirection.Down && (_selectedIndex == _visibleItemsFirstIndex + _visibleItemsCount &&
+            _items[SelectedIndex].Selected = !_items[SelectedIndex].Selected;
+            SelectedIndex += (int)direction;
+            _items[SelectedIndex].Selected = !_items[SelectedIndex].Selected;
+            if (direction == MoveDirection.Down && (SelectedIndex == _visibleItemsFirstIndex + _visibleItemsCount &&
                     _visibleItemsFirstIndex + _visibleItemsCount < _items.Count))
             {
                 _visibleItemsFirstIndex++;
             }
-            else if (_selectedIndex == _visibleItemsFirstIndex &&
+            else if (SelectedIndex == _visibleItemsFirstIndex &&
                         _visibleItemsFirstIndex > 0)
             {
                 _visibleItemsFirstIndex--;
             }
         }
 
+        public void UpdateItems()
+        {
+            FSViewer.UpdateItems();
+            Update();
+        }
+
         private void Update()
         {
-            _items.Clear();
-            _selectedIndex = 0;
-            var names = FSViewer.Items.ToArray();
-            int count = names.Length > _visibleItemsCount ? _visibleItemsCount : names.Length;
-            for (int i = 0; i < names.Length; i++)
+            lock (_locker)
             {
-                string shortName = names[i].Name;
-                if (shortName.Length > NumericConstants.MaxFileNameLength)
+                _items.Clear();
+                SelectedIndex = 0;
+                _visibleItemsFirstIndex = 0;
+                var names = FSViewer.Items.ToArray();
+                for (int i = 0; i < names.Length; i++)
                 {
-                    shortName = shortName.Substring(0, NumericConstants.MaxFileNameLength-4)
-                        .Insert(NumericConstants.MaxFileNameLength-4, StringResources.LongFileNameEnd);
+                    string shortName = names[i].Name;
+                    if (shortName.Length > NumericConstants.MaxFileNameLength)
+                    {
+                        shortName = shortName.Substring(0, NumericConstants.MaxFileNameLength - 4)
+                            .Insert(NumericConstants.MaxFileNameLength - 4, StringResources.LongFileNameEnd);
+                    }
+                    _items.Add(new ListViewItem(this, $"{shortName,-46}{names[i].Extension,-6}{names[i].Size,8}"));
                 }
-                _items.Add(new ListViewItem(this, $"{shortName, -48}{names[i].Extension,-5}{names[i].Size,8}"));
+                _items[SelectedIndex].Selected = true;
             }
-            _items[_selectedIndex].Selected = true;
         }
     }
 }
