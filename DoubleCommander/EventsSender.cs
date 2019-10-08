@@ -53,7 +53,7 @@ namespace DoubleCommander
 
         public static void Join()
         {
-            Task.WaitAll(_painter, _keyListener);
+            Task.WaitAny(_painter, _keyListener);
         }
 
         private static void Paint()

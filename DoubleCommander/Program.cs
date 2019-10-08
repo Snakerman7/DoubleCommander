@@ -9,12 +9,11 @@ namespace DoubleCommander
         static void Main(string[] args)
         {
             Console.WindowWidth = 120;
-            Console.WindowHeight = 25;
+            Console.WindowHeight = 30;
             Console.SetBufferSize(Console.WindowWidth, Console.WindowHeight);
             Console.BackgroundColor = ConsoleColor.White;
             Console.CursorVisible = false;
             Console.Clear();
-
 
             DoublePanelView dpv = new DoublePanelView(
                 new Point(0, 0), 

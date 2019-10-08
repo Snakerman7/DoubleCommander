@@ -15,9 +15,9 @@ namespace DoubleCommander.Views
             : base(position, size, parent)
         {
             _leftView = new ListView(new Point(0 + NumericConstants.MarginUpLeft, 0 + NumericConstants.MarginUpLeft),
-               new Size(Size.Height - NumericConstants.MarginRightDown, Size.Width / 2 - NumericConstants.MarginRightDown), this);
+               new Size(Size.Height - NumericConstants.MarginRightDown - 20, Size.Width / 2 - NumericConstants.MarginRightDown), this);
             _rightView = new ListView(new Point(Size.Width / 2 + NumericConstants.MarginUpLeft, 0 + NumericConstants.MarginUpLeft),
-                new Size(Size.Height - NumericConstants.MarginRightDown, Size.Width / 2 - NumericConstants.MarginRightDown), this)
+                new Size(Size.Height - NumericConstants.MarginRightDown - 20, Size.Width / 2 - NumericConstants.MarginRightDown), this)
             { Enabled = false };
             EventsSender.Subscribe(_leftView);
             EventsSender.Subscribe(_rightView);
@@ -59,9 +59,12 @@ namespace DoubleCommander.Views
                     }
                     if (type == FileSystemItemType.File)
                     {
-                        FileSystemViewer.MoveFile(source, dest, name);
+                        View activeView = _leftView.Enabled ? _leftView : _rightView;
+                        Point viewPosition = new Point(Size.Width / 2 - 200, Size.Height / 2 - 100);
+                        _operationView = new OperationView(OperationType.MoveFile, Path.Combine(source, name),
+                            Path.Combine(dest, name), viewPosition, activeView);
+                        EventsSender.Subscribe(_operationView);
                     }
-                    EventsSender.SendUpdateEvent();
                 }
             }
         }

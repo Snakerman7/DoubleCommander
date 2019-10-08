@@ -3,6 +3,7 @@ using GenericCollections;
 using System;
 using System.IO;
 using System.Linq;
+using System.Security.AccessControl;
 
 namespace DoubleCommander
 {
@@ -22,7 +23,7 @@ namespace DoubleCommander
         public void UpdateItems()
         {
             Items.Clear();
-            foreach(var item in GetDirectoryContent())
+            foreach (var item in GetDirectoryContent())
             {
                 Items.Add(item);
             }
@@ -35,10 +36,15 @@ namespace DoubleCommander
                 return new FileSystemItem[] { new FileSystemItem(StringResources.BackPath, FileSystemItemType.Directory) }
                 .Concat(Directory.GetDirectories(CurrentPath)
                                 .Select(path => new DirectoryInfo(path))
-                                .Select(dir => new FileSystemItem(dir.Name, FileSystemItemType.Directory,string.Empty, StringResources.DirectoryMark)))
+                                .Where(dir => CheckFolderPermission(dir.FullName))
+                                .Select(dir =>
+                                    new FileSystemItem(dir.Name, FileSystemItemType.Directory, string.Empty,
+                                        StringResources.DirectoryMark)))
                 .Concat(Directory.GetFiles(CurrentPath)
                                 .Select(path => new FileInfo(path))
-                                .Select(file => new FileSystemItem(Path.GetFileNameWithoutExtension(file.Name), FileSystemItemType.File, BytesToString(file.Length), file.Extension.TrimStart('.'))));
+                                .Select(file =>
+                                    new FileSystemItem(Path.GetFileNameWithoutExtension(file.Name),
+                                        FileSystemItemType.File, BytesToString(file.Length), file.Extension.TrimStart('.'))));
             }
             else
             {
@@ -63,12 +69,8 @@ namespace DoubleCommander
             else
             {
                 string path = Path.Combine(CurrentPath, name);
-                var access = Directory.GetAccessControl(path);
-                if (!access.AreAuditRulesProtected)
-                {
-                    CurrentPath = path;
-                    UpdateItems();
-                }
+                CurrentPath = path;
+                UpdateItems();
             }
         }
 
@@ -92,6 +94,20 @@ namespace DoubleCommander
                 filePath = Path.Combine(path, name.Insert(name.LastIndexOf('.'), $"(Copy{i++})"));
             }
             return filePath;
+        }
+
+        public bool CheckFolderPermission(string folderPath)
+        {
+            DirectoryInfo dirInfo = new DirectoryInfo(folderPath);
+            try
+            {
+                DirectorySecurity dirAC = dirInfo.GetAccessControl(AccessControlSections.Access);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public static void MoveFile(string sourcePath, string destPath, string fileName)

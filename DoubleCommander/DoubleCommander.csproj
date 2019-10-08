@@ -56,7 +56,6 @@
     <Compile Include="Resources\ColorResources.cs" />
     <Compile Include="Resources\NumericConstants.cs" />
     <Compile Include="Resources\StringResources.cs" />
-    <Compile Include="Views\ConfirmView.cs" />
     <Compile Include="Views\DoublePanelView.cs" />
     <Compile Include="Views\ListView.cs" />
     <Compile Include="Views\ListViewItem.cs" />

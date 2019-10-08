@@ -1,4 +1,6 @@
-﻿namespace DoubleCommander.Resources
+﻿using NConsoleGraphics;
+
+namespace DoubleCommander.Resources
 {
     public static class StringResources
     {

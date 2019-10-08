@@ -2,6 +2,7 @@
 using DoubleCommander.Resources;
 using GenericCollections;
 using NConsoleGraphics;
+using System.Linq;
 
 namespace DoubleCommander.Views
 {
@@ -48,7 +49,8 @@ namespace DoubleCommander.Views
             for (int i = _visibleItemsFirstIndex; i < lastIndex; i++)
             {
                 items[i].Draw(g,
-                    new Point(_itemsStartPosition.X + NumericConstants.MarginUpLeft, _itemsStartPosition.Y + (i - _visibleItemsFirstIndex) *
+                    new Point(_itemsStartPosition.X + NumericConstants.MarginUpLeft, 
+                    _itemsStartPosition.Y + (i - _visibleItemsFirstIndex) *
                                 NumericConstants.ListViewItemHeight + NumericConstants.MarginUpLeft),
                     new Size(NumericConstants.ListViewItemHeight, Size.Width - NumericConstants.MarginRightDown));
             }
