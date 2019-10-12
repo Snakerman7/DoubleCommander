@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Security.AccessControl;
 
-namespace DoubleCommander
+namespace DoubleCommander.FileSystem
 {
     using FileSystemEnumarable = System.Collections.Generic.IEnumerable<FileSystemItem>;
 
@@ -33,22 +33,20 @@ namespace DoubleCommander
         {
             if (CurrentPath != string.Empty)
             {
-                return new FileSystemItem[] { new FileSystemItem(StringResources.BackPath, FileSystemItemType.Directory) }
+                return new FileSystemItem[] { new FileSystemItem(StringResources.BackPath) }
                 .Concat(Directory.GetDirectories(CurrentPath)
                                 .Select(path => new DirectoryInfo(path))
                                 .Where(dir => CheckFolderPermission(dir.FullName))
                                 .Select(dir =>
-                                    new FileSystemItem(dir.Name, FileSystemItemType.Directory, string.Empty,
-                                        StringResources.DirectoryMark)))
+                                    new DirectoryItem(dir.FullName)))
                 .Concat(Directory.GetFiles(CurrentPath)
                                 .Select(path => new FileInfo(path))
                                 .Select(file =>
-                                    new FileSystemItem(Path.GetFileNameWithoutExtension(file.Name),
-                                        FileSystemItemType.File, BytesToString(file.Length), file.Extension.TrimStart('.'))));
+                                    new FileItem(file.FullName, file.Length)));
             }
             else
             {
-                return DriveInfo.GetDrives().Where(d => d.IsReady).Select(d => new FileSystemItem(d.Name, FileSystemItemType.Drive));
+                return DriveInfo.GetDrives().Where(d => d.IsReady).Select(d => new FileSystemItem(d.Name));
             }
         }
 
@@ -74,16 +72,6 @@ namespace DoubleCommander
             }
         }
 
-        private static string BytesToString(long byteCount)
-        {
-            if (byteCount == 0)
-                return "0" + StringResources.FileSizeUnits[0];
-            long bytes = Math.Abs(byteCount);
-            int place = Convert.ToInt32(Math.Floor(Math.Log(bytes, 1024)));
-            double num = Math.Round(bytes / Math.Pow(1024, place), 1);
-            return (Math.Sign(byteCount) * num).ToString() + StringResources.FileSizeUnits[place];
-        }
-
         public static string CheckFile(string filePath)
         {
             string name = Path.GetFileName(filePath);
@@ -96,7 +84,7 @@ namespace DoubleCommander
             return filePath;
         }
 
-        public bool CheckFolderPermission(string folderPath)
+        private static bool CheckFolderPermission(string folderPath)
         {
             DirectoryInfo dirInfo = new DirectoryInfo(folderPath);
             try
@@ -108,18 +96,6 @@ namespace DoubleCommander
             {
                 return false;
             }
-        }
-
-        public static void MoveFile(string sourcePath, string destPath, string fileName)
-        {
-            string sourceFileName = Path.Combine(sourcePath, fileName);
-            string destFileName = Path.Combine(destPath, fileName);
-            int i = 1;
-            while (File.Exists(destFileName))
-            {
-                destFileName = Path.Combine(destPath, fileName.Insert(fileName.IndexOf('.'), $"(Copy{i++})"));
-            }
-            File.Move(sourceFileName, destFileName);
         }
     }
 }

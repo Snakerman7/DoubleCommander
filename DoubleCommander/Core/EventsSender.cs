@@ -5,7 +5,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DoubleCommander
+namespace DoubleCommander.Core
 {
     public static class EventsSender
     {
@@ -22,17 +22,14 @@ namespace DoubleCommander
         {
             PaintEventHandler += view.OnPaint;
             KeyEventHandler += view.OnKeyDown;
+            UpdateEventHandler += view.OnUpdate;
         }
 
         public static void Unsubscribe(View view)
         {
             PaintEventHandler -= view.OnPaint;
             KeyEventHandler -= view.OnKeyDown;
-        }
-
-        public static void SubscribeToUpdateEvent(View view)
-        {
-            UpdateEventHandler += view.OnUpdate;
+            UpdateEventHandler -= view.OnUpdate;
         }
 
         public static void SendUpdateEvent()

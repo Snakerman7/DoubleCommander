@@ -1,4 +1,5 @@
 ﻿using DoubleCommander.Common;
+using DoubleCommander.Core;
 using DoubleCommander.Views;
 using System;
 
@@ -18,7 +19,6 @@ namespace DoubleCommander
             DoublePanelView dpv = new DoublePanelView(
                 new Point(0, 0), 
                 new Size(EventsSender.Graphics.ClientHeight, EventsSender.Graphics.ClientWidth));
-            EventsSender.Subscribe(dpv);
             EventsSender.Start();
             EventsSender.Join();
         }

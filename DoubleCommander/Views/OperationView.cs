@@ -1,4 +1,6 @@
 ﻿using DoubleCommander.Common;
+using DoubleCommander.Core;
+using DoubleCommander.FileSystem;
 using DoubleCommander.Resources;
 using NConsoleGraphics;
 using System.IO;
@@ -29,6 +31,7 @@ namespace DoubleCommander.Views
             _destPath = dest;
             parent.Enabled = false;
             _progressBar = new ProgressBar(new Point(Position.X + 10, Position.Y + 50), new Size(30, Size.Width - 20));
+            EventsSender.Subscribe(this);
         }
 
         public override void OnKeyDown(Keys key)
@@ -47,6 +50,11 @@ namespace DoubleCommander.Views
                     }
                     EventsSender.SendUpdateEvent();
                 }
+                else if((_type == OperationType.CopyDirectory))
+                {
+
+                }
+
                 EventsSender.Unsubscribe(this);
                 Parent.Enabled = true;
             }
@@ -58,37 +66,36 @@ namespace DoubleCommander.Views
 
         public override void OnPaint(ConsoleGraphics g)
         {
-            g.FillRectangle(0xffe9d8b5, Position.X, Position.Y, Size.Width, Size.Height);
+            g.FillRectangle(0xffCCB5A2, Position.X, Position.Y, Size.Width, Size.Height);
             g.DrawRectangle(0xffffffff, Position.X + NumericConstants.MarginUpLeft, Position.Y + NumericConstants.MarginUpLeft,
                 Size.Width - NumericConstants.MarginRightDown, Size.Height - NumericConstants.MarginRightDown, 2);
             _progressBar.Draw(g);
 
-            string name;
+            string name = Path.GetFileName(_sourcePath);
+            name = name.Length > 40 ? name.Substring(0, 36).Insert(36, StringResources.LongFileNameEnd) : name;
+            string text = string.Empty;
             switch (_type)
             {
                 case OperationType.CopyFile:
-                    name = Path.GetFileName(_sourcePath);
-                    name = name.Length > 40 ? name.Substring(0, 36).Insert(36, StringResources.LongFileNameEnd) : name;
-                    g.DrawString($"Copy file: {name}", StringResources.FontName, 0xff000000,
-                        Position.X + 10, Position.Y + 20, 10);
+                    text = $"Copy file: {name}";
                     break;
                 case OperationType.MoveFile:
-                    name = Path.GetFileName(_sourcePath);
-                    name = name.Length > 40 ? name.Substring(0, 36).Insert(36, StringResources.LongFileNameEnd) : name;
-                    g.DrawString($"Move file: {name}", StringResources.FontName, 0xff000000,
-                        Position.X + 10, Position.Y + 20, 10);
+                    text = $"Move file: {name}";
                     break;
             }
+            g.DrawString(text, StringResources.FontName, 0xff000000,
+                Position.X + 10, Position.Y + 20, 10);
+
             if (_doWork)
             {
-                g.FillRectangle(0xff9E9A8F, Position.X + 30, Position.Y + 150, 100, 25);
+                g.FillRectangle(0xffD93A02, Position.X + 30, Position.Y + 150, 100, 25);
             }
             else
             {
-                g.FillRectangle(0xff9E9A8F, Position.X + Size.Width - 130, Position.Y + 150, 100, 25);
+                g.FillRectangle(0xffD93A02, Position.X + Size.Width - 130, Position.Y + 150, 100, 25);
             }
             g.DrawString("Yes", StringResources.FontName, 0xff000000, Position.X + 55, Position.Y + 148, 16);
-            g.DrawString("No", StringResources.FontName, 0xff000000, Position.X + Size.Width - 100, Position.Y + 148, 16);
+            g.DrawString("No", StringResources.FontName, 0xff000000, Position.X + Size.Width - 95, Position.Y + 148, 16);
         }
 
         private void UpdateProgress(int progress)

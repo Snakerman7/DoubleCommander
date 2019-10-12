@@ -5,7 +5,7 @@ using System.Text;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace DoubleCommander
+namespace DoubleCommander.FileSystem
 {
     public static class FileInfoExtensions
     {

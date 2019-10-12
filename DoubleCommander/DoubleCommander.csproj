@@ -50,16 +50,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FileInfoExtensions.cs" />
-    <Compile Include="FileSystemItem.cs" />
-    <Compile Include="FileSystemViewer.cs" />
+    <Compile Include="FileSystem\DirectoryItem.cs" />
+    <Compile Include="FileSystem\FileInfoExtensions.cs" />
+    <Compile Include="FileSystem\FileItem.cs" />
+    <Compile Include="FileSystem\FileSystemItem.cs" />
+    <Compile Include="FileSystem\FileSystemViewer.cs" />
     <Compile Include="Resources\ColorResources.cs" />
     <Compile Include="Resources\NumericConstants.cs" />
     <Compile Include="Resources\StringResources.cs" />
     <Compile Include="Views\DoublePanelView.cs" />
+    <Compile Include="Views\HelpTextBar.cs" />
     <Compile Include="Views\ListView.cs" />
     <Compile Include="Views\ListViewItem.cs" />
-    <Compile Include="EventsSender.cs" />
+    <Compile Include="Core\EventsSender.cs" />
     <Compile Include="Common\Point.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
