@@ -24,17 +24,7 @@ namespace DoubleCommander.FileSystem
         public override string ToString()
         {
             string shortName = Name.Length > 46 ? Name.Substring(0, 42) + StringResources.LongFileNameEnd : Name;
-            return $"{shortName,-46}{Extension,-6}{BytesToString(Size),8}";
-        }
-
-        private static string BytesToString(long byteCount)
-        {
-            if (byteCount == 0)
-                return "0" + StringResources.FileSizeUnits[0];
-            long bytes = Math.Abs(byteCount);
-            int place = Convert.ToInt32(Math.Floor(Math.Log(bytes, 1024)));
-            double num = Math.Round(bytes / Math.Pow(1024, place), 1);
-            return (Math.Sign(byteCount) * num).ToString() + StringResources.FileSizeUnits[place];
+            return $"{shortName,-46}{Extension,-6}{FileSystemViewer.BytesToString(Size),8}";
         }
     }
 }

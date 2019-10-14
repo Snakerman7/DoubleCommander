@@ -59,6 +59,7 @@
     <Compile Include="Resources\NumericConstants.cs" />
     <Compile Include="Resources\StringResources.cs" />
     <Compile Include="Views\DoublePanelView.cs" />
+    <Compile Include="Views\DrawableBox.cs" />
     <Compile Include="Views\HelpTextBar.cs" />
     <Compile Include="Views\ListView.cs" />
     <Compile Include="Views\ListViewItem.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="Common\Size.cs" />
     <Compile Include="Views\OperationView.cs" />
     <Compile Include="Views\ProgressBar.cs" />
+    <Compile Include="Views\PropertiesView.cs" />
     <Compile Include="Views\View.cs" />
   </ItemGroup>
   <ItemGroup>

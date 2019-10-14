@@ -5,7 +5,7 @@ namespace DoubleCommander.Views
 {
     public abstract class View
     {
-        public View Parent { get; set; }
+        public View Parent { get; }
         public Size Size { get; }
         public Point Position { get; }
         public bool Enabled { get; set; } = true;

@@ -21,7 +21,7 @@ namespace DoubleCommander.Views
         private readonly int _visibleItemsCount;
         public int SelectedIndex { get; private set; } = 0;
         private readonly object _locker = new object();
-        private Point _itemsStartPosition;
+        private readonly Point _itemsStartPosition;
         public FileSystemViewer FSViewer { get; } = new FileSystemViewer();
         public FileSystemItem SelectedItem => FSViewer.Items[SelectedIndex];
 
@@ -31,7 +31,6 @@ namespace DoubleCommander.Views
             _itemsStartPosition = new Point(position.X, Position.Y + NumericConstants.ListViewItemHeight);
             _visibleItemsCount = (Size.Height - NumericConstants.ListViewItemHeight * 3) / NumericConstants.ListViewItemHeight;
             var names = FSViewer.Items.ToArray();
-            int count = names.Length > _visibleItemsCount ? _visibleItemsCount : names.Length;
             for (int i = 0; i < names.Length; i++)
             {
                 _items.Add(new ListViewItem(this, names[i].Name));
@@ -143,12 +142,6 @@ namespace DoubleCommander.Views
             _visibleItemsFirstIndex = 0;
             for (int i = 0; i < FSViewer.Items.Count; i++)
             {
-                string shortName = FSViewer.Items[i].Name;
-                if (shortName.Length > NumericConstants.MaxFileNameLength)
-                {
-                    shortName = shortName.Substring(0, NumericConstants.MaxFileNameLength - 4)
-                        .Insert(NumericConstants.MaxFileNameLength - 4, StringResources.LongFileNameEnd);
-                }
                 newItems.Add(new ListViewItem(this, FSViewer.Items[i].ToString()));
             }
             newItems[SelectedIndex].Selected = true;
