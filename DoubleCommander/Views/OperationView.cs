@@ -19,9 +19,9 @@ namespace DoubleCommander.Views
     {
         private readonly ProgressBar _progressBar;
         private readonly OperationType _type;
+        private readonly OkButton _okButton;
         private readonly string _sourcePath;
         private string _destPath;
-        private bool _doWork = false;
 
         public OperationView(OperationType type, string source, string dest, Point position, View parent = null)
             : base(position, new Size(200, 400), parent)
@@ -31,14 +31,15 @@ namespace DoubleCommander.Views
             _destPath = dest;
             parent.Enabled = false;
             _progressBar = new ProgressBar(new Point(Position.X + 10, Position.Y + 50), new Size(30, Size.Width - 20));
+            _okButton = new OkButton(new Point(Position.X + Size.Width / 2 - 50, Position.Y + 150));
             EventsSender.Subscribe(this);
         }
 
-        public override void OnKeyDown(Keys key)
+        public override void OnKeyDown(KeyEventArgs e)
         {
-            if (key == Keys.RETURN)
+            if (e.Key == Keys.RETURN)
             {
-                if ((_type == OperationType.CopyFile || _type == OperationType.MoveFile) && _doWork == true)
+                if ((_type == OperationType.CopyFile || _type == OperationType.MoveFile))
                 {
                     _destPath = FileSystemViewer.CheckFile(_destPath);
                     FileInfo sourceFile = new FileInfo(_sourcePath);
@@ -58,9 +59,10 @@ namespace DoubleCommander.Views
                 EventsSender.Unsubscribe(this);
                 Parent.Enabled = true;
             }
-            if (key == Keys.LEFT || key == Keys.RIGHT)
+            if (e.Key == Keys.ESCAPE)
             {
-                _doWork = !_doWork;
+                EventsSender.Unsubscribe(this);
+                Parent.Enabled = true;
             }
         }
 
@@ -86,16 +88,7 @@ namespace DoubleCommander.Views
             g.DrawString(text, StringResources.FontName, 0xff000000,
                 Position.X + 10, Position.Y + 20, 10);
 
-            if (_doWork)
-            {
-                g.FillRectangle(0xffD93A02, Position.X + 30, Position.Y + 150, 100, 25);
-            }
-            else
-            {
-                g.FillRectangle(0xffD93A02, Position.X + Size.Width - 130, Position.Y + 150, 100, 25);
-            }
-            g.DrawString("Yes", StringResources.FontName, 0xff000000, Position.X + 55, Position.Y + 148, 16);
-            g.DrawString("No", StringResources.FontName, 0xff000000, Position.X + Size.Width - 95, Position.Y + 148, 16);
+            _okButton.Draw(g);
         }
 
         private void UpdateProgress(int progress)

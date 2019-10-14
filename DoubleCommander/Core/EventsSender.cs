@@ -10,7 +10,7 @@ namespace DoubleCommander.Core
     public static class EventsSender
     {
         public static event Action<ConsoleGraphics> PaintEventHandler;
-        public static event Action<Keys> KeyEventHandler;
+        public static event Action<KeyEventArgs> KeyEventHandler;
         public static event Action UpdateEventHandler;
         private static bool _working = true;
         private static readonly Task _painter = new Task(Paint);
@@ -66,64 +66,52 @@ namespace DoubleCommander.Core
 
         private static void ListenKeys()
         {
-            bool isDown = false;
-            bool isUp = false;
-            bool isLeft = false;
-            bool isRight = false;
-            bool isTab = false;
-            bool isReturn = false;
-            bool isBack = false;
-            bool isF1 = false;
-            bool isF2 = false;
+            bool isControlKeyDown = false;
+            bool isFunctionKeyDown = false;
+            bool isLetterKeyDown = false;
             while (_working)
             {
-                if (!isDown && Input.IsKeyDown(Keys.DOWN))
+                if(!isControlKeyDown && IsAnyKeyDown(NumericConstants.ControlKeys, out var controlKey))
                 {
-                    KeyEventHandler.Invoke(Keys.DOWN);
+                    KeyEventHandler.Invoke(new KeyEventArgs(controlKey, false));
                 }
-                else if (!isUp && Input.IsKeyDown(Keys.UP))
+                if (!isFunctionKeyDown && IsAnyKeyDown(NumericConstants.FunctionKeys, out var funcKey))
                 {
-                    KeyEventHandler.Invoke(Keys.UP);
+                    KeyEventHandler.Invoke(new KeyEventArgs(funcKey, false));
                 }
-                if (!isLeft && Input.IsKeyDown(Keys.LEFT))
+                if(!isLetterKeyDown && IsAnyKeyDown(NumericConstants.LettersKeys, out var letterKey))
                 {
-                    KeyEventHandler.Invoke(Keys.LEFT);
+                    KeyEventHandler.Invoke(new KeyEventArgs(letterKey, Input.IsKeyDown(Keys.SHIFT)));
                 }
-                else if(!isRight && Input.IsKeyDown(Keys.RIGHT))
-                {
-                    KeyEventHandler.Invoke(Keys.RIGHT);
-                }
-                if (!isReturn && Input.IsKeyDown(Keys.RETURN))
-                {
-                    KeyEventHandler.Invoke(Keys.RETURN);
-                }
-                if (!isTab && Input.IsKeyDown(Keys.TAB))
-                {
-                    KeyEventHandler.Invoke(Keys.TAB);
-                }
-                if (!isBack && Input.IsKeyDown(Keys.BACK))
-                {
-                    KeyEventHandler.Invoke(Keys.BACK);
-                }
-                if (!isF1 && Input.IsKeyDown(Keys.F1))
-                {
-                    KeyEventHandler.Invoke(Keys.F1);
-                }
-                if (!isF2 && Input.IsKeyDown(Keys.F2))
-                {
-                    KeyEventHandler.Invoke(Keys.F2);
-                }
-                isReturn = Input.IsKeyDown(Keys.RETURN);
-                isDown = Input.IsKeyDown(Keys.DOWN);
-                isLeft = Input.IsKeyDown(Keys.LEFT);
-                isRight = Input.IsKeyDown(Keys.RIGHT);
-                isUp = Input.IsKeyDown(Keys.UP);
-                isTab = Input.IsKeyDown(Keys.TAB);
-                isBack = Input.IsKeyDown(Keys.BACK);
-                isF1 = Input.IsKeyDown(Keys.F1);
-                isF2 = Input.IsKeyDown(Keys.F2);
-                Thread.Sleep(40);
+                isControlKeyDown = IsAnyKeyDown(NumericConstants.ControlKeys, out _);
+                isFunctionKeyDown = IsAnyKeyDown(NumericConstants.FunctionKeys, out _);
+                isLetterKeyDown = IsAnyKeyDown(NumericConstants.LettersKeys, out _);
+                Thread.Sleep(20);
             }
+        }
+
+        private static bool IsAnyKeyDown(Keys[] keys, out Keys downKey)
+        {
+            downKey = Keys.NONAME;
+            foreach(var key in keys)
+            {
+                if (Input.IsKeyDown(key))
+                {
+                    downKey = key;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static char GetLetterKeyChar(Keys key)
+        {
+            int index = (key - Keys.KEY_A);
+            if(index < StringResources.Letters.Length && index >= 0)
+            {
+                return StringResources.Letters[index];
+            }
+            return ' ';
         }
     }
 }

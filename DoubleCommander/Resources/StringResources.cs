@@ -1,4 +1,5 @@
 ﻿using NConsoleGraphics;
+using System.Linq;
 
 namespace DoubleCommander.Resources
 {
@@ -9,5 +10,7 @@ namespace DoubleCommander.Resources
         public const string BackPath = "..";
         public const string LongFileNameEnd = "[..]";
         public const string DirectoryMark = "<DIR>";
+
+        public static readonly char[] Letters = Enumerable.Range('a', 'z' - 'a' + 1).Select(i => (char)i).ToArray();
     }
 }

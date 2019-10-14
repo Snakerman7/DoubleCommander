@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\KeyEventArgs.cs" />
     <Compile Include="FileSystem\DirectoryItem.cs" />
     <Compile Include="FileSystem\FileInfoExtensions.cs" />
     <Compile Include="FileSystem\FileItem.cs" />
@@ -58,6 +59,7 @@
     <Compile Include="Resources\ColorResources.cs" />
     <Compile Include="Resources\NumericConstants.cs" />
     <Compile Include="Resources\StringResources.cs" />
+    <Compile Include="Views\CreateFolderView.cs" />
     <Compile Include="Views\DoublePanelView.cs" />
     <Compile Include="Views\DrawableBox.cs" />
     <Compile Include="Views\HelpTextBar.cs" />
@@ -68,6 +70,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Common\Size.cs" />
+    <Compile Include="Views\OkButton.cs" />
     <Compile Include="Views\OperationView.cs" />
     <Compile Include="Views\ProgressBar.cs" />
     <Compile Include="Views\PropertiesView.cs" />

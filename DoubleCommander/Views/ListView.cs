@@ -66,19 +66,19 @@ namespace DoubleCommander.Views
             }
         }
 
-        public override void OnKeyDown(Keys key)
+        public override void OnKeyDown(KeyEventArgs e)
         {
             if (Enabled)
             {
-                if (key == Keys.DOWN && SelectedIndex < _items.Count - 1)
+                if (e.Key == Keys.DOWN && SelectedIndex < _items.Count - 1)
                 {
                     Move(MoveDirection.Down);
                 }
-                else if (key == Keys.UP && SelectedIndex > 0)
+                else if (e.Key == Keys.UP && SelectedIndex > 0)
                 {
                     Move(MoveDirection.Up);
                 }
-                if (key == Keys.RETURN)
+                if (e.Key == Keys.RETURN)
                 {
                     switch (FSViewer.Items[SelectedIndex])
                     {
@@ -95,13 +95,20 @@ namespace DoubleCommander.Views
                             break;
                     }
                 }
-                if (key == Keys.BACK)
+                if (e.Key == Keys.BACK)
                 {
                     if (FSViewer.CurrentPath != string.Empty)
                     {
                         string name = StringResources.BackPath;
                         FSViewer.GoToFolder(name);
                         Update();
+                    }
+                }
+                if(e.Key == Keys.F9)
+                {
+                    if (FSViewer.CurrentPath != string.Empty)
+                    {
+                        CreateFolderView view = new CreateFolderView(new Point(Position.X, Position.Y), new Size(200, 200), this);
                     }
                 }
             }

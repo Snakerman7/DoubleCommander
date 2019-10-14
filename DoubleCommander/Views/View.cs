@@ -1,4 +1,5 @@
 ﻿using DoubleCommander.Common;
+using DoubleCommander.Core;
 using NConsoleGraphics;
 
 namespace DoubleCommander.Views
@@ -18,7 +19,7 @@ namespace DoubleCommander.Views
         }
 
         public abstract void OnPaint(ConsoleGraphics g);
-        public abstract void OnKeyDown(Keys key);
+        public abstract void OnKeyDown(KeyEventArgs e);
         public virtual void OnUpdate()
         {
             // Override if necessary

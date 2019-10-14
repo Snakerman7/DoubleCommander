@@ -26,16 +26,16 @@ namespace DoubleCommander.Views
             EventsSender.Subscribe(this);
         }
 
-        public override void OnKeyDown(Keys key)
+        public override void OnKeyDown(KeyEventArgs e)
         {
             if (Enabled && (_leftView.Enabled || _rightView.Enabled))
             {
-                if (key == Keys.TAB)
+                if (e.Key == Keys.TAB)
                 {
                     _leftView.Enabled = !_leftView.Enabled;
                     _rightView.Enabled = !_rightView.Enabled;
                 }
-                if (key == Keys.F1)
+                if (e.Key == Keys.F1)
                 {
                     var (source, destPath) = GetOperationParameters();
                     switch (source)
@@ -51,7 +51,7 @@ namespace DoubleCommander.Views
                             break;
                     }
                 }
-                if (key == Keys.F2)
+                if (e.Key == Keys.F2)
                 {
                     //var (source, dest, name, type) = GetOperationParameters();
                     //if (dest == string.Empty || source == string.Empty)
