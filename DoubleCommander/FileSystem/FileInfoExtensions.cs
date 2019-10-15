@@ -9,6 +9,11 @@ namespace DoubleCommander.FileSystem
 {
     public static class FileInfoExtensions
     {
+        public static void Rename(this FileInfo fileInfo, string newName)
+        {
+            fileInfo.MoveTo(Path.Combine(fileInfo.DirectoryName, newName));
+        }
+
         public static void CopyTo(this FileInfo file, FileInfo destination, Action<int> progressCallback)
         {
             const int bufferSize = 1024 * 1024;  //1MB

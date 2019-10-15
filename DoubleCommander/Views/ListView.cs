@@ -108,7 +108,8 @@ namespace DoubleCommander.Views
                 {
                     if (FSViewer.CurrentPath != string.Empty)
                     {
-                        CreateFolderView view = new CreateFolderView(new Point(Position.X, Position.Y), new Size(200, 200), this);
+                        _ = new CreateFolderView(FSViewer.CurrentPath, 
+                            new Point(Position.X + Size.Width/2 - 150, Position.Y + Size.Height/2 - 100), this);
                     }
                 }
             }
@@ -116,7 +117,8 @@ namespace DoubleCommander.Views
 
         public override void OnUpdate()
         {
-            UpdateItems();
+            FSViewer.UpdateItems();
+            Update();
         }
 
         private void Move(MoveDirection direction)
@@ -134,12 +136,6 @@ namespace DoubleCommander.Views
             {
                 _visibleItemsFirstIndex--;
             }
-        }
-
-        public void UpdateItems()
-        {
-            FSViewer.UpdateItems();
-            Update();
         }
 
         private void Update()

@@ -37,19 +37,7 @@ namespace DoubleCommander.Views
                 }
                 if (e.Key == Keys.F1)
                 {
-                    var (source, destPath) = GetOperationParameters();
-                    switch (source)
-                    {
-                        case FileItem file:
-                            View activeView = _leftView.Enabled ? _leftView : _rightView;
-                            Point viewPosition = new Point(Size.Width / 2 - 200, Size.Height / 2 - 100);
-                            OperationView view = new OperationView(OperationType.CopyFile, file.FullName,
-                                Path.Combine(destPath, file.NameWithExtension), viewPosition, activeView);
-                            break;
-                        case DirectoryItem dir:
-
-                            break;
-                    }
+                    CopyOperation();
                 }
                 if (e.Key == Keys.F2)
                 {
@@ -72,6 +60,27 @@ namespace DoubleCommander.Views
         public override void OnPaint(ConsoleGraphics g)
         {
             _helpBar.Draw(g);
+        }
+
+        private void CopyOperation()
+        {
+            var (source, destPath) = GetOperationParameters();
+            if (destPath == string.Empty)
+            {
+                return;
+            }
+            switch (source)
+            {
+                case FileItem file:
+                    View activeView = _leftView.Enabled ? _leftView : _rightView;
+                    Point viewPosition = new Point(Size.Width / 2 - 200, Size.Height / 2 - 100);
+                    OperationView view = new OperationView(OperationType.CopyFile, file.FullName,
+                        Path.Combine(destPath, file.NameWithExtension), viewPosition, activeView);
+                    break;
+                case DirectoryItem dir:
+
+                    break;
+            }
         }
 
         private (FileSystemItem source, string destPath) GetOperationParameters()
