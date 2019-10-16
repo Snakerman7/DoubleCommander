@@ -1,29 +1,30 @@
 ﻿using DoubleCommander.Common;
 using DoubleCommander.Core;
+using DoubleCommander.FileSystem;
 using DoubleCommander.Resources;
 using NConsoleGraphics;
-using System.IO;
 using System.Linq;
-using System.Text;
+using System.IO;
 
 namespace DoubleCommander.Views
 {
-    public class CreateFolderView : View
+    public class RenameView : View
     {
-        private readonly string _path;
         private readonly TextBox _textBox;
         private readonly OkButton _okButton;
         private readonly CancelButton _cancelButton;
+        private readonly FileSystemItem _fsItem;
 
-        public CreateFolderView(string path, Point position, View parent = null)
-            : base(position, new Size(NumericConstants.WindowHeight, NumericConstants.WindowWidth), parent)
+        public RenameView(FileSystemItem fsItem, Point position, View parent = null)
+            : base(position, new Size(150, 300), parent)
         {
-            _path = path;
+            _fsItem = fsItem;
             _textBox = new TextBox(new Point(Position.X + 10, Position.Y + 40), new Size(20, Size.Width - 20));
             _okButton = new OkButton(new Point(Position.X + 25, Position.Y + 100)) { Selected = true };
             _cancelButton = new CancelButton(new Point(Position.X + Size.Width - 125, Position.Y + 100));
             if (Parent != null)
                 Parent.Enabled = false;
+            _textBox.Text = _fsItem.Name;
         }
 
         public override void OnKeyDown(KeyEventArgs e)
@@ -53,14 +54,19 @@ namespace DoubleCommander.Views
         public override void OnPaint(ConsoleGraphics g)
         {
             g.FillRectangle(ColorResources.WindowBackgroundColor, Position.X, Position.Y, Size.Width, Size.Height);
-            g.DrawRectangle(ColorResources.WindowBorderColor, Position.X + NumericConstants.MarginUpLeft,
-                Position.Y + NumericConstants.MarginUpLeft, Size.Width - NumericConstants.MarginRightDown,
-                Size.Height - NumericConstants.MarginRightDown, NumericConstants.WindowBorderThikness);
-            g.DrawString(StringResources.NewFolderViewTitle, StringResources.FontName, ColorResources.WindowTextColor,
-                Position.X + 20, Position.Y + 10, 12);
+            g.DrawRectangle(ColorResources.WindowBorderColor, Position.X + NumericConstants.MarginUpLeft, Position.Y + NumericConstants.MarginUpLeft,
+                Size.Width - NumericConstants.MarginRightDown, Size.Height - NumericConstants.MarginRightDown, NumericConstants.WindowBorderThikness);
+            g.DrawString($"Rename: {_fsItem.Name}", StringResources.FontName, 0xff000000, Position.X + 20, Position.Y + 10, 12);
             _textBox.Draw(g);
             _okButton.Draw(g);
             _cancelButton.Draw(g);
+        }
+
+        public override void Close()
+        {
+            base.Close();
+            if (Parent != null)
+                Parent.Enabled = true;
         }
 
         private void ChangeSelectedButton()
@@ -73,21 +79,20 @@ namespace DoubleCommander.Views
         {
             if (_okButton.Selected)
             {
-                string fullName = Path.Combine(_path, _textBox.Text.ToString());
-                if (!Directory.Exists(fullName))
+                switch (_fsItem)
                 {
-                    Directory.CreateDirectory(fullName);
-                    EventsSender.SendUpdateEvent();
+                    case FileItem file:
+                        FileInfo fileInfo = new FileInfo(file.FullName);
+                        fileInfo.Rename(_textBox.Text + "." + file.Extension);
+                        break;
+                    case DirectoryItem dir:
+                        DirectoryInfo dirInfo = new DirectoryInfo(dir.FullName);
+                        dirInfo.Rename(_textBox.Text);
+                        break;
                 }
+                EventsSender.SendUpdateEvent();
             }
             Close();
-        }
-
-        public override void Close()
-        {
-            base.Close();
-            if (Parent != null)
-                Parent.Enabled = true;
         }
     }
 }

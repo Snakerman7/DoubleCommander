@@ -11,7 +11,7 @@ namespace DoubleCommander.Views
 
         public OkButton(Point position) : base(position, new Size(25, 100))
         {
-            _text = "OK";
+            _text = StringResources.OkButtonText;
         }
 
         public override void Draw(ConsoleGraphics g)

@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DoubleCommander.Resources;
 using System.IO;
-using DoubleCommander.Resources;
 
 namespace DoubleCommander.FileSystem
 {
@@ -16,7 +11,7 @@ namespace DoubleCommander.FileSystem
         public string Extension { get => Path.GetExtension(FullName).TrimStart('.'); }
 
         public FileItem(string fullName, long size)
-            :base(fullName)
+            : base(fullName)
         {
             Size = size;
         }

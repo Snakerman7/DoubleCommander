@@ -16,6 +16,7 @@ namespace DoubleCommander.Views
             Position = position;
             Size = size;
             Parent = parent;
+            EventsSender.Subscribe(this);
         }
 
         public abstract void OnPaint(ConsoleGraphics g);
@@ -23,6 +24,11 @@ namespace DoubleCommander.Views
         public virtual void OnUpdate()
         {
             // Override if necessary
+        }
+
+        public virtual void Close()
+        {
+            EventsSender.Unsubscribe(this);
         }
     }
 }

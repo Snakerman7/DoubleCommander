@@ -1,9 +1,5 @@
-﻿using System;
-using NConsoleGraphics;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using NConsoleGraphics;
+using System;
 
 namespace DoubleCommander.Core
 {
@@ -12,7 +8,7 @@ namespace DoubleCommander.Core
         public Keys Key { get; }
         public bool IsShiftDown { get; }
 
-        public KeyEventArgs(Keys key, bool isShiftDown)
+        public KeyEventArgs(Keys key, bool isShiftDown = false)
         {
             Key = key;
             IsShiftDown = isShiftDown;

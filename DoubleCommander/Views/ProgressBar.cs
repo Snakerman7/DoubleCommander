@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DoubleCommander.Common;
+﻿using DoubleCommander.Common;
 using NConsoleGraphics;
 
 namespace DoubleCommander.Views
@@ -18,11 +13,11 @@ namespace DoubleCommander.Views
             get => _progress;
             set
             {
-                if(value < 0)
+                if (value < 0)
                 {
                     value = 0;
                 }
-                else if(value > 100)
+                else if (value > 100)
                 {
                     value = 100;
                 }

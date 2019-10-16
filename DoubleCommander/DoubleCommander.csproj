@@ -76,6 +76,7 @@
     <Compile Include="Views\OperationView.cs" />
     <Compile Include="Views\ProgressBar.cs" />
     <Compile Include="Views\PropertiesView.cs" />
+    <Compile Include="Views\RenameView.cs" />
     <Compile Include="Views\TextBox.cs" />
     <Compile Include="Views\View.cs" />
   </ItemGroup>

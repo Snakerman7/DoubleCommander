@@ -62,14 +62,17 @@ namespace DoubleCommander.FileSystem
                 {
                     CurrentPath = string.Empty;
                 }
-                UpdateItems();
+            }
+            else if (name == string.Empty)
+            {
+                CurrentPath = name;
             }
             else
             {
                 string path = Path.Combine(CurrentPath, name);
                 CurrentPath = path;
-                UpdateItems();
             }
+            UpdateItems();
         }
 
         public static string CheckFile(string filePath)

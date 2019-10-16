@@ -20,7 +20,6 @@ namespace DoubleCommander.Views
         private int _visibleItemsFirstIndex = 0;
         private readonly int _visibleItemsCount;
         public int SelectedIndex { get; private set; } = 0;
-        private readonly object _locker = new object();
         private readonly Point _itemsStartPosition;
         public FileSystemViewer FSViewer { get; } = new FileSystemViewer();
         public FileSystemItem SelectedItem => FSViewer.Items[SelectedIndex];
@@ -36,34 +35,33 @@ namespace DoubleCommander.Views
                 _items.Add(new ListViewItem(this, names[i].Name));
             }
             _items[SelectedIndex].Selected = true;
-            EventsSender.Subscribe(this);
         }
 
         public override void OnPaint(ConsoleGraphics g)
         {
+            var items = _items;
             g.FillRectangle(ColorResources.ListViewBackgroundColor, Position.X, Position.Y, Size.Width, Size.Height);
-            lock (_locker)
-            {
-                int lastIndex = _visibleItemsFirstIndex + _visibleItemsCount > _items.Count ?
-                    _items.Count : _visibleItemsFirstIndex + _visibleItemsCount;
-                for (int i = _visibleItemsFirstIndex; i < lastIndex; i++)
-                {
-                    _items[i].Draw(g,
-                        new Point(_itemsStartPosition.X + NumericConstants.MarginUpLeft,
-                        _itemsStartPosition.Y + (i - _visibleItemsFirstIndex) *
-                                    NumericConstants.ListViewItemHeight + NumericConstants.MarginUpLeft),
-                        new Size(NumericConstants.ListViewItemHeight, Size.Width - NumericConstants.MarginRightDown));
-                }
 
-                g.DrawLine(ColorResources.AppBackground, Position.X, Position.Y + NumericConstants.ListViewItemHeight,
-                                        Position.X + Size.Width, Position.Y + NumericConstants.ListViewItemHeight, 2);
-                g.DrawLine(ColorResources.AppBackground, Position.X, Size.Height - NumericConstants.ListViewItemHeight,
-                                        Position.X + Size.Width, Size.Height - NumericConstants.ListViewItemHeight, 2);
-                g.DrawString(FSViewer.CurrentPath, StringResources.FontName, ColorResources.ListItemTextColor,
-                    Position.X, Position.Y, NumericConstants.FontSize);
-                g.DrawString($"{SelectedIndex + 1}/{this._items.Count}", StringResources.FontName, ColorResources.ListItemTextColor,
-                    Position.X + 22, Size.Height - NumericConstants.ListViewItemHeight + 3, NumericConstants.FontSize);
+            int lastIndex = _visibleItemsFirstIndex + _visibleItemsCount > items.Count ?
+                items.Count : _visibleItemsFirstIndex + _visibleItemsCount;
+            for (int i = _visibleItemsFirstIndex; i < lastIndex; i++)
+            {
+                items[i].Draw(g,
+                    new Point(_itemsStartPosition.X + NumericConstants.MarginUpLeft,
+                    _itemsStartPosition.Y + (i - _visibleItemsFirstIndex) *
+                                NumericConstants.ListViewItemHeight + NumericConstants.MarginUpLeft),
+                    new Size(NumericConstants.ListViewItemHeight, Size.Width - NumericConstants.MarginRightDown));
             }
+
+            g.DrawLine(ColorResources.AppBackground, Position.X, Position.Y + NumericConstants.ListViewItemHeight,
+                                    Position.X + Size.Width, Position.Y + NumericConstants.ListViewItemHeight, 2);
+            g.DrawLine(ColorResources.AppBackground, Position.X, Size.Height - NumericConstants.ListViewItemHeight,
+                                    Position.X + Size.Width, Size.Height - NumericConstants.ListViewItemHeight, 2);
+            g.DrawString(FSViewer.CurrentPath, StringResources.FontName, ColorResources.ListItemTextColor,
+                Position.X, Position.Y, NumericConstants.FontSize);
+            g.DrawString($"{SelectedIndex + 1}/{this._items.Count}", StringResources.FontName, ColorResources.ListItemTextColor,
+                Position.X + 22, Size.Height - NumericConstants.ListViewItemHeight + 3, NumericConstants.FontSize);
+
         }
 
         public override void OnKeyDown(KeyEventArgs e)
@@ -80,38 +78,85 @@ namespace DoubleCommander.Views
                 }
                 if (e.Key == Keys.RETURN)
                 {
-                    switch (FSViewer.Items[SelectedIndex])
-                    {
-                        case DirectoryItem dir:
-                            FSViewer.GoToFolder(dir.Name);
-                            Update();
-                            break;
-                        case FileItem file:
-                            Process.Start(file.FullName);
-                            break;
-                        case FileSystemItem item:
-                            FSViewer.GoToFolder(item.Name);
-                            Update();
-                            break;
-                    }
+                    ChooseCurrentItem();
                 }
                 if (e.Key == Keys.BACK)
                 {
-                    if (FSViewer.CurrentPath != string.Empty)
-                    {
-                        string name = StringResources.BackPath;
-                        FSViewer.GoToFolder(name);
-                        Update();
-                    }
+                    Back();
                 }
-                if(e.Key == Keys.F9)
+                if (e.Key == Keys.F3)
                 {
-                    if (FSViewer.CurrentPath != string.Empty)
-                    {
-                        _ = new CreateFolderView(FSViewer.CurrentPath, 
-                            new Point(Position.X + Size.Width/2 - 150, Position.Y + Size.Height/2 - 100), this);
-                    }
+                    FSViewer.GoToFolder(string.Empty);
+                    Update();
                 }
+                if (e.Key == Keys.F4)
+                {
+                    OpenPropertiesView();
+                }
+                if (e.Key == Keys.F5)
+                {
+                    OpenRenameView();
+                }
+                if (e.Key == Keys.F6)
+                {
+                    OpenCreateFolderView();
+                }
+            }
+        }
+
+        private void Back()
+        {
+            if (FSViewer.CurrentPath != string.Empty)
+            {
+                FSViewer.GoToFolder(StringResources.BackPath);
+                Update();
+            }
+        }
+
+        private void ChooseCurrentItem()
+        {
+            switch (FSViewer.Items[SelectedIndex])
+            {
+                case DirectoryItem dir:
+                    FSViewer.GoToFolder(dir.Name);
+                    Update();
+                    break;
+                case FileItem file:
+                    Process.Start(file.FullName);
+                    break;
+                case FileSystemItem item:
+                    FSViewer.GoToFolder(item.Name);
+                    Update();
+                    break;
+            }
+        }
+
+        private void OpenPropertiesView()
+        {
+            if (FSViewer.CurrentPath != string.Empty && FSViewer.Items[SelectedIndex].Name != StringResources.BackPath)
+            {
+                _ = new PropertiesView(FSViewer.Items[SelectedIndex],
+                    new Point(Parent.Position.X + Parent.Size.Width / 2 - 250,
+                              Parent.Position.Y + Parent.Size.Height / 2 - 75),
+                    this);
+            }
+        }
+
+        private void OpenRenameView()
+        {
+            if (FSViewer.CurrentPath != string.Empty && FSViewer.Items[SelectedIndex].Name != StringResources.BackPath)
+            {
+                _ = new RenameView(FSViewer.Items[SelectedIndex],
+                    new Point(Position.X + Size.Width / 2 - 150, Position.Y + Size.Height / 2 - 100), this);
+            }
+        }
+
+        private void OpenCreateFolderView()
+        {
+            if (FSViewer.CurrentPath != string.Empty)
+            {
+                _ = new CreateFolderView(FSViewer.CurrentPath,
+                    new Point(Position.X + Size.Width / 2 - 150, Position.Y + Size.Height / 2 - 100), this);
             }
         }
 
@@ -148,10 +193,7 @@ namespace DoubleCommander.Views
                 newItems.Add(new ListViewItem(this, FSViewer.Items[i].ToString()));
             }
             newItems[SelectedIndex].Selected = true;
-            lock (_locker)
-            {
-                _items = newItems;
-            }
+            _items = newItems;
         }
     }
 }

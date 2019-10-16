@@ -1,4 +1,5 @@
 ﻿using DoubleCommander.Common;
+using DoubleCommander.Resources;
 using NConsoleGraphics;
 
 namespace DoubleCommander.Views
@@ -10,12 +11,12 @@ namespace DoubleCommander.Views
         public HelpTextBar(Point position, Size size)
             : base(position, size)
         {
-            Text = "F1 : Copy  F2 : Move";
+            Text = StringResources.HelpText;
         }
 
         public override void Draw(ConsoleGraphics g)
         {
-            g.DrawString(Text, "Consolas", 0xff000000, _position.X, _position.Y, 11);
+            g.DrawString(Text, StringResources.FontName, ColorResources.WindowTextColor, _position.X, _position.Y, 11);
         }
     }
 }

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -12,6 +9,11 @@ namespace DoubleCommander.FileSystem
         public static void Rename(this FileInfo fileInfo, string newName)
         {
             fileInfo.MoveTo(Path.Combine(fileInfo.DirectoryName, newName));
+        }
+
+        public static void CopyTo(this FileInfo source, string target, Action<int> progressCallback)
+        {
+            CopyTo(source, new FileInfo(target), progressCallback);
         }
 
         public static void CopyTo(this FileInfo file, FileInfo destination, Action<int> progressCallback)

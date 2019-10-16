@@ -22,8 +22,7 @@ namespace DoubleCommander.Views
                 new Size(Size.Height - NumericConstants.MarginRightDown - 20, Size.Width / 2 - NumericConstants.MarginRightDown), this)
             { Enabled = false };
             _helpBar = new HelpTextBar(new Point(Position.X + 5, Size.Height - NumericConstants.MarginRightDown - 10),
-                                    new Size(20, Size.Width-10));
-            EventsSender.Subscribe(this);
+                                    new Size(20, Size.Width - 10));
         }
 
         public override void OnKeyDown(KeyEventArgs e)
@@ -41,18 +40,7 @@ namespace DoubleCommander.Views
                 }
                 if (e.Key == Keys.F2)
                 {
-                    //var (source, dest, name, type) = GetOperationParameters();
-                    //if (dest == string.Empty || source == string.Empty)
-                    //{
-                    //    return;
-                    //}
-                    //if (type == FileSystemItemType.File)
-                    //{
-                    //    View activeView = _leftView.Enabled ? _leftView : _rightView;
-                    //    Point viewPosition = new Point(Size.Width / 2 - 200, Size.Height / 2 - 100);
-                    //    OperationView view = new OperationView(OperationType.MoveFile, Path.Combine(source, name),
-                    //        Path.Combine(dest, name), viewPosition, activeView);
-                    //}
+                    MoveOperation();
                 }
             }
         }
@@ -69,12 +57,34 @@ namespace DoubleCommander.Views
             {
                 return;
             }
+            View activeView = _leftView.Enabled ? _leftView : _rightView;
+            Point viewPosition = new Point(Size.Width / 2 - 200, Size.Height / 2 - 100);
             switch (source)
             {
                 case FileItem file:
-                    View activeView = _leftView.Enabled ? _leftView : _rightView;
-                    Point viewPosition = new Point(Size.Width / 2 - 200, Size.Height / 2 - 100);
-                    OperationView view = new OperationView(OperationType.CopyFile, file.FullName,
+                    _ = new OperationView(OperationType.CopyFile, file.FullName,
+                        Path.Combine(destPath, file.NameWithExtension), viewPosition, activeView);
+                    break;
+                case DirectoryItem dir:
+                    _ = new OperationView(OperationType.CopyDirectory, dir.FullName,
+                        Path.Combine(destPath, dir.Name), viewPosition, activeView);
+                    break;
+            }
+        }
+
+        private void MoveOperation()
+        {
+            var (source, destPath) = GetOperationParameters();
+            if (destPath == string.Empty)
+            {
+                return;
+            }
+            View activeView = _leftView.Enabled ? _leftView : _rightView;
+            Point viewPosition = new Point(Size.Width / 2 - 200, Size.Height / 2 - 100);
+            switch (source)
+            {
+                case FileItem file:
+                    _ = new OperationView(OperationType.MoveFile, file.FullName,
                         Path.Combine(destPath, file.NameWithExtension), viewPosition, activeView);
                     break;
                 case DirectoryItem dir:
