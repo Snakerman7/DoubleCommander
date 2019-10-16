@@ -25,7 +25,8 @@ namespace DoubleCommander.FileSystem
             foreach (var sourceFile in source.GetFiles())
             {
                 _currentFileSize = sourceFile.Length;
-                sourceFile.CopyTo(Path.Combine(target.FullName, sourceFile.Name), UpdateProgress);
+                if (File.Exists(Path.Combine(target.FullName, sourceFile.Name)) && overwiteFiles)
+                    sourceFile.CopyTo(Path.Combine(target.FullName, sourceFile.Name), UpdateProgress);
                 _completeSize += _currentFileSize;
             }
 

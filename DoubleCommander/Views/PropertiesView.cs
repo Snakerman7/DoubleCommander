@@ -81,10 +81,10 @@ namespace DoubleCommander.Views
                         $"\n{FileSystemViewer.BytesToString(file.Size)}";
                 case DirectoryItem dir:
                     DirectoryInfo dirInfo = new DirectoryInfo(dir.FullName);
-                    var counts = dirInfo.GetContentCount();
+                    var (filesCount, dirsCount) = dirInfo.GetContentCount();
                     return $"{dir.Name}\n{Path.GetDirectoryName(dir.FullName)}\n{Path.GetPathRoot(dir.FullName)}" +
                         $"\n{dirInfo.LastAccessTime}\n{dirInfo.LastWriteTime}" +
-                        $"\n{FileSystemViewer.BytesToString(dirInfo.GetDirectorySize())}\n{counts.filesCount}\n{counts.dirsCount}";
+                        $"\n{FileSystemViewer.BytesToString(dirInfo.GetDirectorySize())}\n{filesCount}\n{dirsCount}";
                 default:
                     return string.Empty;
             }

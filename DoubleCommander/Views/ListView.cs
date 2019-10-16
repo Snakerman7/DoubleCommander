@@ -87,7 +87,7 @@ namespace DoubleCommander.Views
                 if (e.Key == Keys.F3)
                 {
                     FSViewer.GoToFolder(string.Empty);
-                    Update();
+                    Update(true);
                 }
                 if (e.Key == Keys.F4)
                 {
@@ -109,7 +109,7 @@ namespace DoubleCommander.Views
             if (FSViewer.CurrentPath != string.Empty)
             {
                 FSViewer.GoToFolder(StringResources.BackPath);
-                Update();
+                Update(true);
             }
         }
 
@@ -119,14 +119,14 @@ namespace DoubleCommander.Views
             {
                 case DirectoryItem dir:
                     FSViewer.GoToFolder(dir.Name);
-                    Update();
+                    Update(true);
                     break;
                 case FileItem file:
                     Process.Start(file.FullName);
                     break;
                 case FileSystemItem item:
                     FSViewer.GoToFolder(item.Name);
-                    Update();
+                    Update(true);
                     break;
             }
         }
@@ -163,7 +163,7 @@ namespace DoubleCommander.Views
         public override void OnUpdate()
         {
             FSViewer.UpdateItems();
-            Update();
+            Update(false);
         }
 
         private void Move(MoveDirection direction)
@@ -183,11 +183,14 @@ namespace DoubleCommander.Views
             }
         }
 
-        private void Update()
+        private void Update(bool resetSelectedIndex)
         {
             List<ListViewItem> newItems = new List<ListViewItem>();
-            SelectedIndex = 0;
-            _visibleItemsFirstIndex = 0;
+            if (resetSelectedIndex)
+            {
+                SelectedIndex = 0;
+                _visibleItemsFirstIndex = 0;
+            }
             for (int i = 0; i < FSViewer.Items.Count; i++)
             {
                 newItems.Add(new ListViewItem(this, FSViewer.Items[i].ToString()));

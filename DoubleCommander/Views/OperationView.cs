@@ -23,7 +23,7 @@ namespace DoubleCommander.Views
         private readonly OkButton _okButton;
         private readonly CancelButton _cancelButton;
         private readonly string _sourcePath;
-        private string _destPath;
+        private readonly string _destPath;
 
         public OperationView(OperationType type, string source, string dest, Point position, View parent = null)
             : base(position, new Size(NumericConstants.OperationViewHeight, NumericConstants.OperationViewWidth), parent)
