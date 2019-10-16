@@ -74,6 +74,9 @@ namespace DoubleCommander.Views
                 case OperationType.CopyDirectory:
                     text = $"Copy directory: {name}";
                     break;
+                case OperationType.MoveDirectory:
+                    text = $"Move directory: {name}";
+                    break;
             }
             g.DrawString(text, StringResources.FontName, 0xff000000,
                 Position.X + 10, Position.Y + 20, 10);
@@ -83,22 +86,71 @@ namespace DoubleCommander.Views
 
         private void Action()
         {
-            if ((_type == OperationType.CopyFile || _type == OperationType.MoveFile) && _okButton.Selected)
+            if (!_okButton.Selected)
             {
-                _destPath = FileSystemViewer.CheckFile(_destPath);
+                return;
+            }
+            switch (_type)
+            {
+                case OperationType.CopyFile:
+                    CopyFile();
+                    break;
+                case OperationType.MoveFile:
+                    MoveFile();
+                    break;
+                case OperationType.CopyDirectory:
+                    CopyDirectory();
+                    break;
+                case OperationType.MoveDirectory:
+                    MoveDirectory();
+                    break;
+            }
+            EventsSender.SendUpdateEvent();
+        }
+
+        private void MoveDirectory()
+        {
+            if (Path.GetPathRoot(_sourcePath) == Path.GetPathRoot(_destPath))
+            {
+                Directory.Move(_sourcePath, _destPath);
+                UpdateProgress(100);
+            }
+            else
+            {
+                CopyDirectory();
+                Directory.Delete(_sourcePath, true);
+            }
+        }
+
+        private void CopyDirectory()
+        {
+            DirectoryInfo sourceDir = new DirectoryInfo(_sourcePath);
+            sourceDir.CopyTo(_destPath, UpdateProgress);
+        }
+
+        private void CopyFile()
+        {
+            if (!File.Exists(_destPath))
+            {
                 FileInfo sourceFile = new FileInfo(_sourcePath);
                 sourceFile.CopyTo(_destPath, UpdateProgress);
-                if (_type == OperationType.MoveFile)
-                {
-                    sourceFile.Delete();
-                }
-                EventsSender.SendUpdateEvent();
             }
-            else if ((_type == OperationType.CopyDirectory) && _okButton.Selected)
+        }
+
+        private void MoveFile()
+        {
+            if(Path.GetPathRoot(_sourcePath) == Path.GetPathRoot(_destPath))
             {
-                DirectoryInfo sourceDir = new DirectoryInfo(_sourcePath);
-                sourceDir.CopyTo(_destPath, UpdateProgress);
-                EventsSender.SendUpdateEvent();
+                if (!File.Exists(_destPath))
+                {
+                    File.Move(_sourcePath, _destPath);
+                    UpdateProgress(100);
+                }
+            }
+            else
+            {
+                CopyFile();
+                File.Delete(_sourcePath);
             }
         }
 

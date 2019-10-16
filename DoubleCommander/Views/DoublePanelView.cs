@@ -88,7 +88,8 @@ namespace DoubleCommander.Views
                         Path.Combine(destPath, file.NameWithExtension), viewPosition, activeView);
                     break;
                 case DirectoryItem dir:
-
+                    _ = new OperationView(OperationType.MoveDirectory, dir.FullName,
+                        Path.Combine(destPath, dir.Name), viewPosition, activeView);
                     break;
             }
         }
