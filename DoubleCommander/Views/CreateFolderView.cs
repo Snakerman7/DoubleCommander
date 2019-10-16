@@ -2,6 +2,7 @@
 using DoubleCommander.Core;
 using DoubleCommander.Resources;
 using NConsoleGraphics;
+using System;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -31,6 +32,7 @@ namespace DoubleCommander.Views
             if (e.Key == Keys.RETURN)
             {
                 Action();
+                Close();
             }
             else if (e.Key == Keys.ESCAPE)
             {
@@ -71,16 +73,22 @@ namespace DoubleCommander.Views
 
         private void Action()
         {
-            if (_okButton.Selected)
+            try
             {
-                string fullName = Path.Combine(_path, _textBox.Text.ToString());
-                if (!Directory.Exists(fullName))
+                if (_okButton.Selected)
                 {
-                    Directory.CreateDirectory(fullName);
-                    EventsSender.SendUpdateEvent();
+                    string fullName = Path.Combine(_path, _textBox.Text.ToString());
+                    if (!Directory.Exists(fullName))
+                    {
+                        Directory.CreateDirectory(fullName);
+                        EventsSender.SendUpdateEvent();
+                    }
                 }
             }
-            Close();
+            catch(Exception ex)
+            {
+                _ = new MessageView(ex.Message, Parent);
+            }
         }
 
         public override void Close()

@@ -5,6 +5,7 @@ using DoubleCommander.Resources;
 using NConsoleGraphics;
 using System.Linq;
 using System.IO;
+using System;
 
 namespace DoubleCommander.Views
 {
@@ -79,16 +80,23 @@ namespace DoubleCommander.Views
         {
             if (_okButton.Selected)
             {
-                switch (_fsItem)
+                try
                 {
-                    case FileItem file:
-                        FileInfo fileInfo = new FileInfo(file.FullName);
-                        fileInfo.Rename(_textBox.Text + "." + file.Extension);
-                        break;
-                    case DirectoryItem dir:
-                        DirectoryInfo dirInfo = new DirectoryInfo(dir.FullName);
-                        dirInfo.Rename(_textBox.Text);
-                        break;
+                    switch (_fsItem)
+                    {
+                        case FileItem file:
+                            FileInfo fileInfo = new FileInfo(file.FullName);
+                            fileInfo.Rename(_textBox.Text + "." + file.Extension);
+                            break;
+                        case DirectoryItem dir:
+                            DirectoryInfo dirInfo = new DirectoryInfo(dir.FullName);
+                            dirInfo.Rename(_textBox.Text);
+                            break;
+                    }
+                }
+                catch(Exception ex)
+                {
+                    _ = new MessageView(ex.Message, Parent);
                 }
                 EventsSender.SendUpdateEvent();
             }

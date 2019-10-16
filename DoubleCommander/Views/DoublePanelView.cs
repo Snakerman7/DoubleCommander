@@ -4,6 +4,7 @@ using DoubleCommander.FileSystem;
 using DoubleCommander.Resources;
 using NConsoleGraphics;
 using System.IO;
+using System.Linq;
 
 namespace DoubleCommander.Views
 {
@@ -41,6 +42,14 @@ namespace DoubleCommander.Views
                 if (e.Key == Keys.F2)
                 {
                     MoveOperation();
+                }
+                if(e.Key == Keys.F7)
+                {
+                    View activeView = _leftView.Enabled ? _leftView : _rightView;
+                    string message = "dfksdjvndsnvjksdnjdsfdjsbhshvbdshdhjvbsdvhjsbvhjsbdvhsbfjahskjfasvsjdbvjhbdsvjshvd" +
+                        "jcndkjsnjsndjvbsdvjshbdvjhbsd s shdvbjsdbh bjsd jhd ssdj sdshdbjshvbakjhakscjnkdncakcnk" +
+                        "vjkdsvnksjd  dkjsnkjsdnkjsdnvjksdvnskjdnsjdnvkjsdnvjksdnvkjnsdjvknsdkjvnjkfklwmaslkdmcamsklcm";
+                    _ = new MessageView(message, activeView);
                 }
             }
         }

@@ -3,6 +3,7 @@ using DoubleCommander.Core;
 using DoubleCommander.FileSystem;
 using DoubleCommander.Resources;
 using NConsoleGraphics;
+using System;
 using System.IO;
 
 namespace DoubleCommander.Views
@@ -31,7 +32,7 @@ namespace DoubleCommander.Views
             _sourcePath = source;
             _destPath = dest;
             parent.Enabled = false;
-            _progressBar = new ProgressBar(new Point(Position.X + 10, Position.Y + 50), new Size(30, Size.Width - 20));
+            _progressBar = new ProgressBar(new Point(Position.X + 10, Position.Y + 60), new Size(30, Size.Width - 20));
             _okButton = new OkButton(new Point(Position.X + 50, Position.Y + 150)) { Selected = true };
             _cancelButton = new CancelButton(new Point(Position.X + Size.Width - 150, Position.Y + 150));
         }
@@ -40,7 +41,8 @@ namespace DoubleCommander.Views
         {
             if (e.Key == Keys.RETURN)
             {
-                Action();
+                if (_okButton.Selected)
+                    Action();
                 Close();
             }
             if (e.Key == Keys.LEFT || e.Key == Keys.RIGHT)
@@ -66,16 +68,16 @@ namespace DoubleCommander.Views
             switch (_type)
             {
                 case OperationType.CopyFile:
-                    text = $"Copy file: {name}";
+                    text = $"Copy file:\n{name}";
                     break;
                 case OperationType.MoveFile:
-                    text = $"Move file: {name}";
+                    text = $"Move file:\n{name}";
                     break;
                 case OperationType.CopyDirectory:
-                    text = $"Copy directory: {name}";
+                    text = $"Copy directory:\n{name}";
                     break;
                 case OperationType.MoveDirectory:
-                    text = $"Move directory: {name}";
+                    text = $"Move directory:\n{name}";
                     break;
             }
             g.DrawString(text, StringResources.FontName, 0xff000000,
@@ -86,10 +88,6 @@ namespace DoubleCommander.Views
 
         private void Action()
         {
-            if (!_okButton.Selected)
-            {
-                return;
-            }
             switch (_type)
             {
                 case OperationType.CopyFile:
@@ -110,47 +108,75 @@ namespace DoubleCommander.Views
 
         private void MoveDirectory()
         {
-            if (Path.GetPathRoot(_sourcePath) == Path.GetPathRoot(_destPath))
+            try
             {
-                Directory.Move(_sourcePath, _destPath);
-                UpdateProgress(100);
+                if (Path.GetPathRoot(_sourcePath) == Path.GetPathRoot(_destPath))
+                {
+                    Directory.Move(_sourcePath, _destPath);
+                    UpdateProgress(100);
+                }
+                else
+                {
+                    CopyDirectory();
+                    Directory.Delete(_sourcePath, true);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                CopyDirectory();
-                Directory.Delete(_sourcePath, true);
+                _ = new MessageView(ex.Message, Parent);
             }
         }
 
         private void CopyDirectory()
         {
-            DirectoryInfo sourceDir = new DirectoryInfo(_sourcePath);
-            sourceDir.CopyTo(_destPath, UpdateProgress);
+            try
+            {
+                DirectoryInfo sourceDir = new DirectoryInfo(_sourcePath);
+                sourceDir.CopyTo(_destPath, UpdateProgress);
+            }
+            catch (Exception ex)
+            {
+                _ = new MessageView(ex.Message, Parent);
+            }
         }
 
         private void CopyFile()
         {
-            if (!File.Exists(_destPath))
+            try
             {
-                FileInfo sourceFile = new FileInfo(_sourcePath);
-                sourceFile.CopyTo(_destPath, UpdateProgress);
+                if (!File.Exists(_destPath))
+                {
+                    FileInfo sourceFile = new FileInfo(_sourcePath);
+                    sourceFile.CopyTo(_destPath, UpdateProgress);
+                }
+            }
+            catch (Exception ex)
+            {
+                _ = new MessageView(ex.Message, Parent);
             }
         }
 
         private void MoveFile()
         {
-            if(Path.GetPathRoot(_sourcePath) == Path.GetPathRoot(_destPath))
+            try
             {
-                if (!File.Exists(_destPath))
+                if (Path.GetPathRoot(_sourcePath) == Path.GetPathRoot(_destPath))
                 {
-                    File.Move(_sourcePath, _destPath);
-                    UpdateProgress(100);
+                    if (!File.Exists(_destPath))
+                    {
+                        File.Move(_sourcePath, _destPath);
+                        UpdateProgress(100);
+                    }
+                }
+                else
+                {
+                    CopyFile();
+                    File.Delete(_sourcePath);
                 }
             }
-            else
+            catch(Exception ex)
             {
-                CopyFile();
-                File.Delete(_sourcePath);
+                _ = new MessageView(ex.Message, Parent);
             }
         }
 
