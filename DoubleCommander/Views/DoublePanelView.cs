@@ -43,14 +43,6 @@ namespace DoubleCommander.Views
                 {
                     MoveOperation();
                 }
-                if(e.Key == Keys.F7)
-                {
-                    View activeView = _leftView.Enabled ? _leftView : _rightView;
-                    string message = "dfksdjvndsnvjksdnjdsfdjsbhshvbdshdhjvbsdvhjsbvhjsbdvhsbfjahskjfasvsjdbvjhbdsvjshvd" +
-                        "jcndkjsnjsndjvbsdvjshbdvjhbsd s shdvbjsdbh bjsd jhd ssdj sdshdbjshvbakjhakscjnkdncakcnk" +
-                        "vjkdsvnksjd  dkjsnkjsdnkjsdnvjksdvnskjdnsjdnvkjsdnvjksdnvkjnsdjvknsdkjvnjkfklwmaslkdmcamsklcm";
-                    _ = new MessageView(message, activeView);
-                }
             }
         }
 
