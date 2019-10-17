@@ -97,6 +97,7 @@ namespace DoubleCommander.Views
                 catch(Exception ex)
                 {
                     _ = new MessageView(ex.Message, Parent);
+                    Parent = null;
                 }
                 EventsSender.SendUpdateEvent();
             }

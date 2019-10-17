@@ -31,7 +31,8 @@ namespace DoubleCommander.Views
             _type = type;
             _sourcePath = source;
             _destPath = dest;
-            parent.Enabled = false;
+            if (Parent != null)
+                parent.Enabled = false;
             _progressBar = new ProgressBar(new Point(Position.X + 10, Position.Y + 60), new Size(30, Size.Width - 20));
             _okButton = new OkButton(new Point(Position.X + 50, Position.Y + 150)) { Selected = true };
             _cancelButton = new CancelButton(new Point(Position.X + Size.Width - 150, Position.Y + 150));
@@ -124,6 +125,7 @@ namespace DoubleCommander.Views
             catch (Exception ex)
             {
                 _ = new MessageView(ex.Message, Parent);
+                Parent = null;
             }
         }
 
@@ -137,6 +139,7 @@ namespace DoubleCommander.Views
             catch (Exception ex)
             {
                 _ = new MessageView(ex.Message, Parent);
+                Parent = null;
             }
         }
 
@@ -153,6 +156,7 @@ namespace DoubleCommander.Views
             catch (Exception ex)
             {
                 _ = new MessageView(ex.Message, Parent);
+                Parent = null;
             }
         }
 
@@ -177,6 +181,7 @@ namespace DoubleCommander.Views
             catch(Exception ex)
             {
                 _ = new MessageView(ex.Message, Parent);
+                Parent = null;
             }
         }
 
@@ -194,7 +199,8 @@ namespace DoubleCommander.Views
         public override void Close()
         {
             base.Close();
-            Parent.Enabled = true;
+            if (Parent != null)
+                Parent.Enabled = true;
         }
     }
 }
