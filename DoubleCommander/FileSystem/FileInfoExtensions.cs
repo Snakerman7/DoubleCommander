@@ -25,7 +25,6 @@ namespace DoubleCommander.FileSystem
             long len = file.Length;
             float flen = len;
             Task writer = null;
-
             using (var source = file.OpenRead())
             using (var dest = destination.OpenWrite())
             {

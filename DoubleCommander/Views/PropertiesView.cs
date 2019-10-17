@@ -90,7 +90,7 @@ namespace DoubleCommander.Views
                             $"\n{FileSystemViewer.BytesToString(dirInfo.GetDirectorySize())}\n{filesCount}\n{dirsCount}";
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Close();
                 _ = new MessageView(ex.Message, Parent);

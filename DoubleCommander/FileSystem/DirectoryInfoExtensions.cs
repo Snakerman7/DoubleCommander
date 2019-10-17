@@ -51,10 +51,8 @@ namespace DoubleCommander.FileSystem
             var startDirectorySize = default(long);
             if (directoryInfo == null || !directoryInfo.Exists)
                 return startDirectorySize;
-
             foreach (var fileInfo in directoryInfo.GetFiles())
                 Interlocked.Add(ref startDirectorySize, fileInfo.Length);
-
             if (recursive)
                 Parallel.ForEach(directoryInfo.GetDirectories(), (subDirectory) =>
             Interlocked.Add(ref startDirectorySize, GetDirectorySize(subDirectory, recursive)));
@@ -68,10 +66,8 @@ namespace DoubleCommander.FileSystem
             var dirsCount = default(int);
             if (directoryInfo == null || !directoryInfo.Exists)
                 return (filesCount, dirsCount);
-
             filesCount += directoryInfo.GetFiles().Length;
             dirsCount += directoryInfo.GetDirectories().Length;
-
             if (recursive)
             {
                 Parallel.ForEach(directoryInfo.GetDirectories(), (subDirectory) =>
@@ -81,7 +77,6 @@ namespace DoubleCommander.FileSystem
                     Interlocked.Add(ref dirsCount, innerDirsCount);
                 });
             }
-
             return (filesCount, dirsCount);
         }
     }

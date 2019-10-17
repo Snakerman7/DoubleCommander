@@ -15,7 +15,6 @@ namespace DoubleCommander
             Console.BackgroundColor = ConsoleColor.White;
             Console.CursorVisible = false;
             Console.Clear();
-
             _ = new DoublePanelView(
                 new Point(0, 0), 
                 new Size(EventsSender.Graphics.ClientHeight, EventsSender.Graphics.ClientWidth));

@@ -18,7 +18,6 @@ namespace DoubleCommander.Resources
             "F1 : Copy | F2 : Move | F3 : List of disks | F4 : Properties | F5 : Rename | F6 : New folder";
         public const string OkButtonText = "Ok";
         public const string CancelButtonText = "Cancel";
-
         public static readonly char[] Letters = Enumerable.Range('a', 'z' - 'a' + 1).Select(i => (char)i).ToArray();
     }
 }

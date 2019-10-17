@@ -42,7 +42,6 @@ namespace DoubleCommander.Views
         {
             var items = _items;
             g.FillRectangle(ColorResources.ListViewBackgroundColor, Position.X, Position.Y, Size.Width, Size.Height);
-
             int lastIndex = _visibleItemsFirstIndex + _visibleItemsCount > items.Count ?
                 items.Count : _visibleItemsFirstIndex + _visibleItemsCount;
             for (int i = _visibleItemsFirstIndex; i < lastIndex; i++)
@@ -53,7 +52,6 @@ namespace DoubleCommander.Views
                                 NumericConstants.ListViewItemHeight + NumericConstants.MarginUpLeft),
                     new Size(NumericConstants.ListViewItemHeight, Size.Width - NumericConstants.MarginRightDown));
             }
-
             g.DrawLine(ColorResources.AppBackground, Position.X, Position.Y + NumericConstants.ListViewItemHeight,
                                     Position.X + Size.Width, Position.Y + NumericConstants.ListViewItemHeight, 2);
             g.DrawLine(ColorResources.AppBackground, Position.X, Size.Height - NumericConstants.ListViewItemHeight,
@@ -62,7 +60,6 @@ namespace DoubleCommander.Views
                 Position.X, Position.Y, NumericConstants.FontSize);
             g.DrawString($"{SelectedIndex + 1}/{this._items.Count}", StringResources.FontName, ColorResources.ListItemTextColor,
                 Position.X + 22, Size.Height - NumericConstants.ListViewItemHeight + 3, NumericConstants.FontSize);
-
         }
 
         public override void OnKeyDown(KeyEventArgs e)
@@ -118,7 +115,7 @@ namespace DoubleCommander.Views
         {
             try
             {
-                switch (FSViewer.Items[SelectedIndex])
+                switch (SelectedItem)
                 {
                     case DirectoryItem dir:
                         FSViewer.GoToFolder(dir.Name);
@@ -142,9 +139,9 @@ namespace DoubleCommander.Views
 
         private void OpenPropertiesView()
         {
-            if (FSViewer.CurrentPath != string.Empty && FSViewer.Items[SelectedIndex].Name != StringResources.BackPath)
+            if (FSViewer.CurrentPath != string.Empty && SelectedItem.Name != StringResources.BackPath)
             {
-                _ = new PropertiesView(FSViewer.Items[SelectedIndex],
+                _ = new PropertiesView(SelectedItem,
                     new Point(Parent.Position.X + Parent.Size.Width / 2 - 250,
                               Parent.Position.Y + Parent.Size.Height / 2 - 75),
                     this);
@@ -153,9 +150,9 @@ namespace DoubleCommander.Views
 
         private void OpenRenameView()
         {
-            if (FSViewer.CurrentPath != string.Empty && FSViewer.Items[SelectedIndex].Name != StringResources.BackPath)
+            if (FSViewer.CurrentPath != string.Empty && SelectedItem.Name != StringResources.BackPath)
             {
-                _ = new RenameView(FSViewer.Items[SelectedIndex],
+                _ = new RenameView(SelectedItem,
                     new Point(Position.X + Size.Width / 2 - 150, Position.Y + Size.Height / 2 - 100), this);
             }
         }
