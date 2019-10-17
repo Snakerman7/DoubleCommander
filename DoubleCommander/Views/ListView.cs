@@ -4,6 +4,7 @@ using DoubleCommander.FileSystem;
 using DoubleCommander.Resources;
 using GenericCollections;
 using NConsoleGraphics;
+using System;
 using System.Diagnostics;
 
 namespace DoubleCommander.Views
@@ -115,19 +116,27 @@ namespace DoubleCommander.Views
 
         private void ChooseCurrentItem()
         {
-            switch (FSViewer.Items[SelectedIndex])
+            try
             {
-                case DirectoryItem dir:
-                    FSViewer.GoToFolder(dir.Name);
-                    Update(true);
-                    break;
-                case FileItem file:
-                    Process.Start(file.FullName);
-                    break;
-                case FileSystemItem item:
-                    FSViewer.GoToFolder(item.Name);
-                    Update(true);
-                    break;
+                switch (FSViewer.Items[SelectedIndex])
+                {
+                    case DirectoryItem dir:
+                        FSViewer.GoToFolder(dir.Name);
+                        Update(true);
+                        break;
+                    case FileItem file:
+                        Process.Start(file.FullName);
+                        break;
+                    case FileSystemItem item:
+                        FSViewer.GoToFolder(item.Name);
+                        Update(true);
+                        break;
+                }
+            }
+            catch(Exception ex)
+            {
+                _ = new MessageView(ex.Message, this);
+                FSViewer.GoToFolder(StringResources.BackPath);
             }
         }
 

@@ -36,7 +36,6 @@ namespace DoubleCommander.FileSystem
                 return new FileSystemItem[] { new FileSystemItem(StringResources.BackPath) }
                 .Concat(Directory.GetDirectories(CurrentPath)
                                 .Select(path => new DirectoryInfo(path))
-                                .Where(dir => CheckFolderPermission(dir.FullName))
                                 .Select(dir =>
                                     new DirectoryItem(dir.FullName)))
                 .Concat(Directory.GetFiles(CurrentPath)
@@ -87,19 +86,6 @@ namespace DoubleCommander.FileSystem
             return filePath;
         }
 
-        private static bool CheckFolderPermission(string folderPath)
-        {
-            DirectoryInfo dirInfo = new DirectoryInfo(folderPath);
-            try
-            {
-                DirectorySecurity dirAC = dirInfo.GetAccessControl(AccessControlSections.Access);
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
         public static string BytesToString(long byteCount)
         {
             if (byteCount == 0)

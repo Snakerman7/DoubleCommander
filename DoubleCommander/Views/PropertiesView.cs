@@ -3,6 +3,7 @@ using DoubleCommander.Core;
 using DoubleCommander.FileSystem;
 using DoubleCommander.Resources;
 using NConsoleGraphics;
+using System;
 using System.IO;
 
 namespace DoubleCommander.Views
@@ -72,22 +73,29 @@ namespace DoubleCommander.Views
 
         private string LoadInfo()
         {
-            switch (_fsItem)
+            try
             {
-                case FileItem file:
-                    FileInfo fileInfo = new FileInfo(file.FullName);
-                    return $"{file.Name}\n{Path.GetDirectoryName(file.FullName)}\n{Path.GetPathRoot(file.FullName)}" +
-                        $"\n{fileInfo.IsReadOnly}\n{fileInfo.LastAccessTime}\n{fileInfo.LastWriteTime}" +
-                        $"\n{FileSystemViewer.BytesToString(file.Size)}";
-                case DirectoryItem dir:
-                    DirectoryInfo dirInfo = new DirectoryInfo(dir.FullName);
-                    var (filesCount, dirsCount) = dirInfo.GetContentCount();
-                    return $"{dir.Name}\n{Path.GetDirectoryName(dir.FullName)}\n{Path.GetPathRoot(dir.FullName)}" +
-                        $"\n{dirInfo.LastAccessTime}\n{dirInfo.LastWriteTime}" +
-                        $"\n{FileSystemViewer.BytesToString(dirInfo.GetDirectorySize())}\n{filesCount}\n{dirsCount}";
-                default:
-                    return string.Empty;
+                switch (_fsItem)
+                {
+                    case FileItem file:
+                        FileInfo fileInfo = new FileInfo(file.FullName);
+                        return $"{file.Name}\n{Path.GetDirectoryName(file.FullName)}\n{Path.GetPathRoot(file.FullName)}" +
+                            $"\n{fileInfo.IsReadOnly}\n{fileInfo.LastAccessTime}\n{fileInfo.LastWriteTime}" +
+                            $"\n{FileSystemViewer.BytesToString(file.Size)}";
+                    case DirectoryItem dir:
+                        DirectoryInfo dirInfo = new DirectoryInfo(dir.FullName);
+                        var (filesCount, dirsCount) = dirInfo.GetContentCount();
+                        return $"{dir.Name}\n{Path.GetDirectoryName(dir.FullName)}\n{Path.GetPathRoot(dir.FullName)}" +
+                            $"\n{dirInfo.LastAccessTime}\n{dirInfo.LastWriteTime}" +
+                            $"\n{FileSystemViewer.BytesToString(dirInfo.GetDirectorySize())}\n{filesCount}\n{dirsCount}";
+                }
             }
+            catch(Exception ex)
+            {
+                Close();
+                _ = new MessageView(ex.Message, Parent);
+            }
+            return string.Empty;
         }
     }
 }

@@ -17,7 +17,7 @@ namespace DoubleCommander.FileSystem
         }
 
         private static void CopyTo(this DirectoryInfo source, DirectoryInfo target,
-            Action<int> progressCallback, bool overwiteFiles = true)
+            Action<int> progressCallback, bool overwiteFiles = false)
         {
             target.Create();
             foreach (var sourceChildDirectory in source.GetDirectories())
@@ -39,7 +39,7 @@ namespace DoubleCommander.FileSystem
             }
         }
 
-        public static void CopyTo(this DirectoryInfo source, string target, Action<int> progressCallback, bool overwiteFiles = true)
+        public static void CopyTo(this DirectoryInfo source, string target, Action<int> progressCallback, bool overwiteFiles = false)
         {
             _totalDirSize = source.GetDirectorySize();
             _completeSize = 0;
