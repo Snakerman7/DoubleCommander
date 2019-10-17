@@ -20,12 +20,14 @@ namespace DoubleCommander.FileSystem
             Action<int> progressCallback, bool overwiteFiles = true)
         {
             target.Create();
-            Parallel.ForEach(source.GetDirectories(), (sourceChildDirectory) =>
-                CopyTo(sourceChildDirectory, new DirectoryInfo(Path.Combine(target.FullName, sourceChildDirectory.Name)), progressCallback));
+            foreach (var sourceChildDirectory in source.GetDirectories())
+            {
+                CopyTo(sourceChildDirectory, new DirectoryInfo(Path.Combine(target.FullName, sourceChildDirectory.Name)), progressCallback);
+            }
             foreach (var sourceFile in source.GetFiles())
             {
                 _currentFileSize = sourceFile.Length;
-                if (File.Exists(Path.Combine(target.FullName, sourceFile.Name)) && overwiteFiles)
+                if (!File.Exists(Path.Combine(target.FullName, sourceFile.Name)) || overwiteFiles)
                     sourceFile.CopyTo(Path.Combine(target.FullName, sourceFile.Name), UpdateProgress);
                 _completeSize += _currentFileSize;
             }
@@ -40,6 +42,7 @@ namespace DoubleCommander.FileSystem
         public static void CopyTo(this DirectoryInfo source, string target, Action<int> progressCallback, bool overwiteFiles = true)
         {
             _totalDirSize = source.GetDirectorySize();
+            _completeSize = 0;
             CopyTo(source, new DirectoryInfo(target), progressCallback, overwiteFiles);
         }
 

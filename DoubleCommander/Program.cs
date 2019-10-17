@@ -16,7 +16,7 @@ namespace DoubleCommander
             Console.CursorVisible = false;
             Console.Clear();
 
-            DoublePanelView dpv = new DoublePanelView(
+            _ = new DoublePanelView(
                 new Point(0, 0), 
                 new Size(EventsSender.Graphics.ClientHeight, EventsSender.Graphics.ClientWidth));
             EventsSender.Start();
