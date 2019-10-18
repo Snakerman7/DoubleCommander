@@ -26,14 +26,11 @@ namespace DoubleCommander.Views
                 if (_okButton.Selected)
                 {
                     string fullName = Path.Combine(_path, _textBox.Text.ToString());
-                    if (!Directory.Exists(fullName))
-                    {
-                        Directory.CreateDirectory(fullName);
-                        EventsSender.SendUpdateEvent();
-                    }
+                    Directory.CreateDirectory(fullName);
+                    EventsSender.SendUpdateEvent();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _ = new MessageView(ex.Message, Parent);
                 Parent = null;
