@@ -26,7 +26,7 @@ namespace DoubleCommander.Views
                                     new Size(20, Size.Width - 10));
         }
 
-        public override void OnKeyDown(KeyEventArgs e)
+        public override void OnKeyDown(KeyDownEventArgs e)
         {
             if (Enabled && (_leftView.Enabled || _rightView.Enabled))
             {
@@ -46,9 +46,9 @@ namespace DoubleCommander.Views
             }
         }
 
-        public override void OnPaint(ConsoleGraphics g)
+        public override void OnPaint(PaintEventArgs e)
         {
-            _helpBar.Draw(g);
+            _helpBar.Draw(e.Graphics);
         }
 
         private void CopyOperation()

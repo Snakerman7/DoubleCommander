@@ -30,7 +30,7 @@ namespace DoubleCommander.Views
             }
         }
 
-        public override void OnKeyDown(KeyEventArgs e)
+        public override void OnKeyDown(KeyDownEventArgs e)
         {
             if (e.Key == Keys.RETURN || e.Key == Keys.ESCAPE)
             {
@@ -38,8 +38,9 @@ namespace DoubleCommander.Views
             }
         }
 
-        public override void OnPaint(ConsoleGraphics g)
+        public override void OnPaint(PaintEventArgs e)
         {
+            ConsoleGraphics g = e.Graphics;
             g.FillRectangle(ColorResources.WindowBackgroundColor, Position.X, Position.Y, Size.Width, Size.Height);
             g.DrawRectangle(ColorResources.WindowBorderColor, Position.X + NumericConstants.MarginUpLeft,
                 Position.Y + NumericConstants.MarginUpLeft, Size.Width - NumericConstants.MarginRightDown,

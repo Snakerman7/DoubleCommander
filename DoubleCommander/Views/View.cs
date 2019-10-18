@@ -19,8 +19,8 @@ namespace DoubleCommander.Views
             EventsSender.Subscribe(this);
         }
 
-        public abstract void OnPaint(ConsoleGraphics g);
-        public abstract void OnKeyDown(KeyEventArgs e);
+        public abstract void OnPaint(PaintEventArgs e);
+        public abstract void OnKeyDown(KeyDownEventArgs e);
         public virtual void OnUpdate()
         {
             // Override if necessary

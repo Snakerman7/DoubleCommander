@@ -38,8 +38,9 @@ namespace DoubleCommander.Views
             _items[SelectedIndex].Selected = true;
         }
 
-        public override void OnPaint(ConsoleGraphics g)
+        public override void OnPaint(PaintEventArgs e)
         {
+            ConsoleGraphics g = e.Graphics;
             var items = _items;
             g.FillRectangle(ColorResources.ListViewBackgroundColor, Position.X, Position.Y, Size.Width, Size.Height);
             int lastIndex = _visibleItemsFirstIndex + _visibleItemsCount > items.Count ?
@@ -62,7 +63,7 @@ namespace DoubleCommander.Views
                 Position.X + 22, Size.Height - NumericConstants.ListViewItemHeight + 3, NumericConstants.FontSize);
         }
 
-        public override void OnKeyDown(KeyEventArgs e)
+        public override void OnKeyDown(KeyDownEventArgs e)
         {
             if (Enabled)
             {

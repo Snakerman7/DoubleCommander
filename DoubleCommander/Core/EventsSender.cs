@@ -14,9 +14,9 @@ namespace DoubleCommander.Core
         Keys.KEY_Q, Keys.KEY_R, Keys.KEY_S, Keys.KEY_T, Keys.KEY_U, Keys.KEY_V, Keys.KEY_W, Keys.KEY_X, Keys.KEY_Y, Keys.KEY_Z};
         public static readonly Keys[] FunctionKeys = { Keys.F1, Keys.F2, Keys.F3, Keys.F4, Keys.F5, Keys.F6, Keys.F7, Keys.F8, Keys.F9 };
         public static readonly Keys[] ControlKeys = { Keys.LEFT, Keys.RIGHT, Keys.UP, Keys.DOWN, Keys.BACK, Keys.RETURN, Keys.TAB, Keys.ESCAPE };
-        public static event Action<ConsoleGraphics> PaintEventHandler;
-        public static event Action<KeyEventArgs> KeyEventHandler;
-        public static event Action UpdateEventHandler;
+        public static event Action<PaintEventArgs> PaintEvent;
+        public static event Action<KeyDownEventArgs> KeyDownEvent;
+        public static event Action UpdateEvent;
         private static bool _working = true;
         private static readonly Task _painter = new Task(Paint);
         private static readonly Task _keyListener = new Task(ListenKeys);
@@ -24,21 +24,21 @@ namespace DoubleCommander.Core
 
         public static void Subscribe(View view)
         {
-            PaintEventHandler += view.OnPaint;
-            KeyEventHandler += view.OnKeyDown;
-            UpdateEventHandler += view.OnUpdate;
+            PaintEvent += view.OnPaint;
+            KeyDownEvent += view.OnKeyDown;
+            UpdateEvent += view.OnUpdate;
         }
 
         public static void Unsubscribe(View view)
         {
-            PaintEventHandler -= view.OnPaint;
-            KeyEventHandler -= view.OnKeyDown;
-            UpdateEventHandler -= view.OnUpdate;
+            PaintEvent -= view.OnPaint;
+            KeyDownEvent -= view.OnKeyDown;
+            UpdateEvent -= view.OnUpdate;
         }
 
         public static void SendUpdateEvent()
         {
-            UpdateEventHandler.Invoke();
+            UpdateEvent.Invoke();
         }
 
         public static void Start()
@@ -62,7 +62,7 @@ namespace DoubleCommander.Core
             while (_working)
             {
                 Graphics.FillRectangle(ColorResources.AppBackground, 0, 0, Graphics.ClientWidth, Graphics.ClientHeight);
-                PaintEventHandler.Invoke(Graphics);
+                PaintEvent.Invoke(new PaintEventArgs(Graphics));
                 Graphics.FlipPages();
                 Thread.Sleep(100);
             }
@@ -77,15 +77,15 @@ namespace DoubleCommander.Core
             {
                 if (!isControlKeyDown && IsAnyKeyDown(ControlKeys, out var controlKey))
                 {
-                    KeyEventHandler.Invoke(new KeyEventArgs(controlKey));
+                    KeyDownEvent.Invoke(new KeyDownEventArgs(controlKey));
                 }
                 if (!isFunctionKeyDown && IsAnyKeyDown(FunctionKeys, out var funcKey))
                 {
-                    KeyEventHandler.Invoke(new KeyEventArgs(funcKey));
+                    KeyDownEvent.Invoke(new KeyDownEventArgs(funcKey));
                 }
                 if (!isLetterKeyDown && IsAnyKeyDown(LettersKeys, out var letterKey))
                 {
-                    KeyEventHandler.Invoke(new KeyEventArgs(letterKey, Input.IsKeyDown(Keys.SHIFT)));
+                    KeyDownEvent.Invoke(new KeyDownEventArgs(letterKey, Input.IsKeyDown(Keys.SHIFT)));
                 }
                 isControlKeyDown = IsAnyKeyDown(ControlKeys, out _);
                 isFunctionKeyDown = IsAnyKeyDown(FunctionKeys, out _);
