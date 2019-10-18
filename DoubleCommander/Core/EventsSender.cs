@@ -70,6 +70,8 @@ namespace DoubleCommander.Core
 
         private static void ListenKeys()
         {
+            int repetArrowsTick = 0;
+            int slowTicks = 0;
             bool isControlKeyDown = false;
             bool isFunctionKeyDown = false;
             bool isLetterKeyDown = false;
@@ -87,7 +89,29 @@ namespace DoubleCommander.Core
                 {
                     KeyDownEvent.Invoke(new KeyDownEventArgs(letterKey, Input.IsKeyDown(Keys.SHIFT)));
                 }
-                isControlKeyDown = IsAnyKeyDown(ControlKeys, out _);
+                if(isControlKeyDown = IsAnyKeyDown(ControlKeys, out var key))
+                {
+                    if(key == Keys.UP || key == Keys.DOWN)
+                    {
+                        repetArrowsTick++;
+                        if(slowTicks < 2 && repetArrowsTick > 40)
+                        {
+                            isControlKeyDown = false;
+                            repetArrowsTick = 0;
+                            slowTicks++;
+                        }
+                        else if(slowTicks == 2 && repetArrowsTick > 5)
+                        {
+                            isControlKeyDown = false;
+                            repetArrowsTick = 0;
+                        }
+                    }
+                } 
+                else if(repetArrowsTick > 0)
+                {
+                    repetArrowsTick = 0;
+                    slowTicks = 0;
+                }
                 isFunctionKeyDown = IsAnyKeyDown(FunctionKeys, out _);
                 isLetterKeyDown = IsAnyKeyDown(LettersKeys, out _);
                 Thread.Sleep(10);
