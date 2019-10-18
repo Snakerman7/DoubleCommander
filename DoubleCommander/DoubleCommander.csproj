@@ -33,8 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ConsoleGraphics.cs">
-      <HintPath>..\..\..\..\Libraries\ConsoleGraphics.cs.dll</HintPath>
+    <Reference Include="ConsoleGraphics.cs, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>libs\ConsoleGraphics.cs.dll</HintPath>
     </Reference>
     <Reference Include="GenericCollections, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
