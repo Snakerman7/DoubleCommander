@@ -201,14 +201,18 @@ namespace DoubleCommander.Views
         private void Update(bool resetSelectedIndex)
         {
             List<ListViewItem> newItems = new List<ListViewItem>();
+            for (int i = 0; i < FSViewer.Items.Count; i++)
+            {
+                newItems.Add(new ListViewItem(this, FSViewer.Items[i].ToString()));
+            }
             if (resetSelectedIndex)
             {
                 SelectedIndex = 0;
                 _visibleItemsFirstIndex = 0;
             }
-            for (int i = 0; i < FSViewer.Items.Count; i++)
+            else if (SelectedIndex >= newItems.Count)
             {
-                newItems.Add(new ListViewItem(this, FSViewer.Items[i].ToString()));
+                SelectedIndex = newItems.Count - 1;
             }
             newItems[SelectedIndex].Selected = true;
             _items = newItems;
