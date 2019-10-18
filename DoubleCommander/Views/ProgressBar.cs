@@ -1,4 +1,5 @@
 ﻿using DoubleCommander.Common;
+using DoubleCommander.Resources;
 using NConsoleGraphics;
 
 namespace DoubleCommander.Views
@@ -33,8 +34,8 @@ namespace DoubleCommander.Views
 
         public override void Draw(ConsoleGraphics g)
         {
-            g.FillRectangle(0xff00a5a5, _position.X, _position.Y, _progressWidth, _size.Height);
-            g.DrawRectangle(0xffc7c7c7, _position.X, _position.Y, _size.Width, _size.Height);
+            g.FillRectangle(ColorResources.ProgressBarBorderColor, _position.X, _position.Y, _progressWidth, _size.Height);
+            g.DrawRectangle(ColorResources.ProgressBarColor, _position.X, _position.Y, _size.Width, _size.Height);
         }
     }
 }

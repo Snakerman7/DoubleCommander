@@ -18,8 +18,8 @@
         public const int ButtonHeight = 25;
         public const int ButtonOkTextAlign = 35;
         public const int ButtonCancelTextAlign = 13;
-        public const int WindowWidth = 300;
-        public const int WindowHeight = 150;
+        public const int EditTextViewWidth = 300;
+        public const int EditTextViewHeight = 150;
         public const int TextBoxFontSize = 12;
     }
 }

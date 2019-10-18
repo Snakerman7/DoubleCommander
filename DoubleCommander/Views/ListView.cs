@@ -55,9 +55,11 @@ namespace DoubleCommander.Views
                     new Size(NumericConstants.ListViewItemHeight, Size.Width - NumericConstants.MarginRightDown));
             }
             g.DrawLine(ColorResources.AppBackground, Position.X, Position.Y + NumericConstants.ListViewItemHeight,
-                                    Position.X + Size.Width, Position.Y + NumericConstants.ListViewItemHeight, 2);
+                       Position.X + Size.Width, Position.Y + NumericConstants.ListViewItemHeight, 
+                       NumericConstants.WindowBorderThikness);
             g.DrawLine(ColorResources.AppBackground, Position.X, Size.Height - NumericConstants.ListViewItemHeight,
-                                    Position.X + Size.Width, Size.Height - NumericConstants.ListViewItemHeight, 2);
+                       Position.X + Size.Width, Size.Height - NumericConstants.ListViewItemHeight,
+                       NumericConstants.WindowBorderThikness);
 
             g.DrawString(_drawingPath, StringResources.FontName, ColorResources.ListItemTextColor,
                 Position.X, Position.Y, NumericConstants.FontSize);
@@ -133,7 +135,7 @@ namespace DoubleCommander.Views
                         break;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _ = new MessageView(ex.Message, this);
                 FSViewer.GoToFolder(StringResources.BackPath);
@@ -145,8 +147,8 @@ namespace DoubleCommander.Views
             if (FSViewer.CurrentPath != string.Empty && SelectedItem.Name != StringResources.BackPath)
             {
                 _ = new PropertiesView(SelectedItem,
-                    new Point(Parent.Position.X + Parent.Size.Width / 2 - 250,
-                              Parent.Position.Y + Parent.Size.Height / 2 - 75),
+                    new Point(Parent.Position.X + Parent.Size.Width / 2 - NumericConstants.PropertiesViewWidth / 2,
+                              Parent.Position.Y + Parent.Size.Height / 2 - NumericConstants.PropertiesViewHeight / 2),
                     this);
             }
         }
@@ -156,7 +158,9 @@ namespace DoubleCommander.Views
             if (FSViewer.CurrentPath != string.Empty && SelectedItem.Name != StringResources.BackPath)
             {
                 _ = new RenameView(StringResources.RenameViewTitle, SelectedItem,
-                    new Point(Position.X + Size.Width / 2 - 150, Position.Y + Size.Height / 2 - 100), this);
+                    new Point(Position.X + Size.Width / 2 - NumericConstants.EditTextViewWidth / 2, 
+                              Position.Y + Size.Height / 2 - NumericConstants.EditTextViewHeight / 2), 
+                    this);
             }
         }
 
@@ -165,7 +169,9 @@ namespace DoubleCommander.Views
             if (FSViewer.CurrentPath != string.Empty)
             {
                 _ = new CreateFolderView(StringResources.NewFolderViewTitle, FSViewer.CurrentPath,
-                    new Point(Position.X + Size.Width / 2 - 150, Position.Y + Size.Height / 2 - 100), this);
+                    new Point(Position.X + Size.Width / 2 - NumericConstants.EditTextViewWidth / 2, 
+                              Position.Y + Size.Height / 2 - NumericConstants.EditTextViewHeight / 2), 
+                    this);
             }
         }
 

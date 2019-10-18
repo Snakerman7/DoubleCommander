@@ -18,12 +18,14 @@ namespace DoubleCommander.Views
             : base(position, size, parent)
         {
             _leftView = new ListView(new Point(0 + NumericConstants.MarginUpLeft, 0 + NumericConstants.MarginUpLeft),
-               new Size(Size.Height - NumericConstants.MarginRightDown - 20, Size.Width / 2 - NumericConstants.MarginRightDown), this);
+               new Size(Size.Height - NumericConstants.MarginRightDown - 20, Size.Width / 2 - NumericConstants.MarginRightDown),
+               this);
             _rightView = new ListView(new Point(Size.Width / 2 + NumericConstants.MarginUpLeft, 0 + NumericConstants.MarginUpLeft),
-                new Size(Size.Height - NumericConstants.MarginRightDown - 20, Size.Width / 2 - NumericConstants.MarginRightDown), this)
+                new Size(Size.Height - NumericConstants.MarginRightDown - 20, Size.Width / 2 - NumericConstants.MarginRightDown),
+                this)
             { Enabled = false };
             _helpBar = new HelpTextBar(new Point(Position.X + 5, Size.Height - NumericConstants.MarginRightDown - 10),
-                                    new Size(20, Size.Width - 10));
+                                       new Size(20, Size.Width - 10));
         }
 
         public override void OnKeyDown(KeyDownEventArgs e)
@@ -59,7 +61,8 @@ namespace DoubleCommander.Views
                 return;
             }
             View activeView = _leftView.Enabled ? _leftView : _rightView;
-            Point viewPosition = new Point(Size.Width / 2 - 200, Size.Height / 2 - 100);
+            Point viewPosition = new Point(Size.Width / 2 - NumericConstants.OperationViewWidth / 2,
+                                           Size.Height / 2 - NumericConstants.OperationViewHeight / 2);
             switch (source)
             {
                 case FileItem file:
@@ -81,7 +84,8 @@ namespace DoubleCommander.Views
                 return;
             }
             View activeView = _leftView.Enabled ? _leftView : _rightView;
-            Point viewPosition = new Point(Size.Width / 2 - 200, Size.Height / 2 - 100);
+            Point viewPosition = new Point(Size.Width / 2 - NumericConstants.OperationViewWidth / 2,
+                                           Size.Height / 2 - NumericConstants.OperationViewHeight / 2);
             switch (source)
             {
                 case FileItem file:

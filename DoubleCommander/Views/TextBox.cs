@@ -16,7 +16,8 @@ namespace DoubleCommander.Views
 
         public override void Draw(ConsoleGraphics g)
         {
-            g.DrawRectangle(ColorResources.TextBoxBorderColor, _position.X, _position.Y, _size.Width, _size.Height, 2);
+            g.DrawRectangle(ColorResources.TextBoxBorderColor, _position.X, _position.Y, _size.Width, _size.Height, 
+                NumericConstants.WindowBorderThikness);
             g.FillRectangle(ColorResources.TextBoxBackgroundColor, _position.X, _position.Y, _size.Width, _size.Height);
             g.DrawString(Text, StringResources.FontName, ColorResources.ListItemSelectedTextColor, _position.X,
                 _position.Y, NumericConstants.TextBoxFontSize);

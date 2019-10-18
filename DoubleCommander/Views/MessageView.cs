@@ -12,8 +12,8 @@ namespace DoubleCommander.Views
 
         public MessageView(string message, View parent = null)
             : base(new Point(EventsSender.Graphics.ClientWidth / 2 - NumericConstants.OperationViewWidth / 2,
-                   EventsSender.Graphics.ClientHeight / 2 - NumericConstants.OperationViewHeight / 2),
-                  new Size(NumericConstants.OperationViewHeight, NumericConstants.OperationViewWidth), parent)
+                             EventsSender.Graphics.ClientHeight / 2 - NumericConstants.OperationViewHeight / 2),
+                   new Size(NumericConstants.OperationViewHeight, NumericConstants.OperationViewWidth), parent)
         {
             _message = message;
             int newLineCount = message.Length / 50;
@@ -45,8 +45,8 @@ namespace DoubleCommander.Views
             g.DrawRectangle(ColorResources.WindowBorderColor, Position.X + NumericConstants.MarginUpLeft,
                 Position.Y + NumericConstants.MarginUpLeft, Size.Width - NumericConstants.MarginRightDown,
                 Size.Height - NumericConstants.MarginRightDown, NumericConstants.WindowBorderThikness);
-            g.DrawString(_message, StringResources.FontName, 0xff000000,
-                Position.X + 10, Position.Y + 10, 10);
+            g.DrawString(_message, StringResources.FontName, ColorResources.WindowTextColor,
+                Position.X + 10, Position.Y + 10, NumericConstants.FontSize);
             _okButton.Draw(g);
         }
 

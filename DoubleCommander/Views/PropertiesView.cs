@@ -23,8 +23,8 @@ namespace DoubleCommander.Views
             {
                 Parent.Enabled = false;
             }
-            _okButton = new Button(StringResources.OkButtonText, 35, new Point(Position.X + Size.Width / 2 - NumericConstants.ButtonWidth / 2,
-                                               Position.Y + Size.Height - 40))
+            _okButton = new Button(StringResources.OkButtonText, 35, 
+                new Point(Position.X + Size.Width / 2 - NumericConstants.ButtonWidth / 2, Position.Y + Size.Height - 40))
             { Selected = true };
             _labels = LoadLabels();
             _infoText = LoadInfo();
@@ -46,7 +46,8 @@ namespace DoubleCommander.Views
                 Position.Y + NumericConstants.MarginUpLeft, Size.Width - NumericConstants.MarginRightDown,
                 Size.Height - NumericConstants.MarginRightDown, NumericConstants.WindowBorderThikness);
             g.DrawString(_labels, StringResources.FontName, ColorResources.WindowTextColor, Position.X + 10, Position.Y + 20, 10);
-            g.DrawString(_infoText, StringResources.FontName, ColorResources.WindowTextColor, Position.X + 150, Position.Y + 20, 10);
+            g.DrawString(_infoText, StringResources.FontName, ColorResources.WindowTextColor,
+                Position.X + 150, Position.Y + 20, 10);
             _okButton.Draw(g);
         }
 

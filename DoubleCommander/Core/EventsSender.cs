@@ -38,7 +38,7 @@ namespace DoubleCommander.Core
 
         public static void SendUpdateEvent()
         {
-            UpdateEvent.Invoke();
+            UpdateEvent?.Invoke();
         }
 
         public static void Start()
@@ -62,7 +62,7 @@ namespace DoubleCommander.Core
             while (_working)
             {
                 Graphics.FillRectangle(ColorResources.AppBackground, 0, 0, Graphics.ClientWidth, Graphics.ClientHeight);
-                PaintEvent.Invoke(new PaintEventArgs(Graphics));
+                PaintEvent?.Invoke(new PaintEventArgs(Graphics));
                 Graphics.FlipPages();
                 Thread.Sleep(100);
             }
@@ -79,15 +79,15 @@ namespace DoubleCommander.Core
             {
                 if (!isControlKeyDown && IsAnyKeyDown(ControlKeys, out var controlKey))
                 {
-                    KeyDownEvent.Invoke(new KeyDownEventArgs(controlKey));
+                    KeyDownEvent?.Invoke(new KeyDownEventArgs(controlKey));
                 }
                 if (!isFunctionKeyDown && IsAnyKeyDown(FunctionKeys, out var funcKey))
                 {
-                    KeyDownEvent.Invoke(new KeyDownEventArgs(funcKey));
+                    KeyDownEvent?.Invoke(new KeyDownEventArgs(funcKey));
                 }
                 if (!isLetterKeyDown && IsAnyKeyDown(LettersKeys, out var letterKey))
                 {
-                    KeyDownEvent.Invoke(new KeyDownEventArgs(letterKey, Input.IsKeyDown(Keys.SHIFT)));
+                    KeyDownEvent?.Invoke(new KeyDownEventArgs(letterKey, Input.IsKeyDown(Keys.SHIFT)));
                 }
                 if(isControlKeyDown = IsAnyKeyDown(ControlKeys, out var key))
                 {

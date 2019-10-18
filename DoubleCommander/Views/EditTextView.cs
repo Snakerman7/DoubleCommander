@@ -15,7 +15,7 @@ namespace DoubleCommander.Views
         protected readonly Button _cancelButton;
 
         public EditTextView(string title, Point position, View parent = null) 
-            : base(position, new Size(NumericConstants.WindowHeight, NumericConstants.WindowWidth), parent)
+            : base(position, new Size(NumericConstants.EditTextViewHeight, NumericConstants.EditTextViewWidth), parent)
         {
             _title = title;
             _textBox = new TextBox(new Point(Position.X + 10, Position.Y + 40), new Size(20, Size.Width - 20));

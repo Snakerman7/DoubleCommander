@@ -84,8 +84,8 @@ namespace DoubleCommander.Views
                     text = $"Move directory:\n{name}";
                     break;
             }
-            g.DrawString(text, StringResources.FontName, 0xff000000,
-                Position.X + 10, Position.Y + 20, 10);
+            g.DrawString(text, StringResources.FontName, ColorResources.WindowTextColor,
+                Position.X + 10, Position.Y + 20, NumericConstants.FontSize);
             _okButton.Draw(g);
             _cancelButton.Draw(g);
         }
