@@ -64,6 +64,7 @@
     <Compile Include="Views\CreateFolderView.cs" />
     <Compile Include="Views\DoublePanelView.cs" />
     <Compile Include="Views\DrawableBox.cs" />
+    <Compile Include="Views\EditTextView.cs" />
     <Compile Include="Views\HelpTextBar.cs" />
     <Compile Include="Views\ListView.cs" />
     <Compile Include="Views\ListViewItem.cs" />

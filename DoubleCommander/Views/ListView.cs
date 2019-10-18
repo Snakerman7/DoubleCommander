@@ -152,7 +152,7 @@ namespace DoubleCommander.Views
         {
             if (FSViewer.CurrentPath != string.Empty && SelectedItem.Name != StringResources.BackPath)
             {
-                _ = new RenameView(SelectedItem,
+                _ = new RenameView(StringResources.RenameViewTitle, SelectedItem,
                     new Point(Position.X + Size.Width / 2 - 150, Position.Y + Size.Height / 2 - 100), this);
             }
         }
@@ -161,7 +161,7 @@ namespace DoubleCommander.Views
         {
             if (FSViewer.CurrentPath != string.Empty)
             {
-                _ = new CreateFolderView(FSViewer.CurrentPath,
+                _ = new CreateFolderView(StringResources.NewFolderViewTitle, FSViewer.CurrentPath,
                     new Point(Position.X + Size.Width / 2 - 150, Position.Y + Size.Height / 2 - 100), this);
             }
         }

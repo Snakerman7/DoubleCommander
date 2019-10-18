@@ -14,6 +14,7 @@ namespace DoubleCommander.Resources
         public const string DirectoryPropertiesLabels =
             "Name:\nParent directory:\nRoot directory:\nLast read time:\nLast write time:\nSize:\nFiles:\nFolders:";
         public const string NewFolderViewTitle = "New folder";
+        public const string RenameViewTitle = "Rename: ";
         public const string HelpText =
             "F1 : Copy | F2 : Move | F3 : List of disks | F4 : Properties | F5 : Rename | F6 : New folder";
         public const string OkButtonText = "Ok";
