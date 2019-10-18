@@ -34,8 +34,8 @@ namespace DoubleCommander.Views
 
         public override void Draw(ConsoleGraphics g)
         {
-            g.FillRectangle(ColorResources.ProgressBarBorderColor, _position.X, _position.Y, _progressWidth, _size.Height);
-            g.DrawRectangle(ColorResources.ProgressBarColor, _position.X, _position.Y, _size.Width, _size.Height);
+            g.FillRectangle(ColorResources.ProgressBarColor, _position.X, _position.Y, _progressWidth, _size.Height);
+            g.DrawRectangle(ColorResources.ProgressBarBorderColor, _position.X, _position.Y, _size.Width, _size.Height);
         }
     }
 }

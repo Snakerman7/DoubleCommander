@@ -16,6 +16,6 @@
         public const uint TextBoxBorderColor = 0xff000000;
         public const uint TextBoxBackgroundColor = 0xffffffff;
         public const uint ProgressBarBorderColor = 0xffc7c7c7;
-        public const uint ProgressBarColor = 0xffc7c7c7;
+        public const uint ProgressBarColor = 0xff00a5a5;
     }
 }
