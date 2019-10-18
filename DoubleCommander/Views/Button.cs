@@ -4,14 +4,17 @@ using NConsoleGraphics;
 
 namespace DoubleCommander.Views
 {
-    class CancelButton : DrawableBox
+    public class Button : DrawableBox
     {
         private readonly string _text;
+        private readonly int _textAlign;
         public bool Selected { get; set; } = false;
 
-        public CancelButton(Point position) : base(position, new Size(NumericConstants.ButtonHeight, NumericConstants.ButtonWidth))
+        public Button(string Text, int textAlign, Point position)
+            : base(position, new Size(NumericConstants.ButtonHeight, NumericConstants.ButtonWidth))
         {
-            _text = StringResources.CancelButtonText;
+            _text = Text;
+            _textAlign = textAlign;
         }
 
         public override void Draw(ConsoleGraphics g)
@@ -22,8 +25,8 @@ namespace DoubleCommander.Views
             else
                 color = ColorResources.UnselectedButtonColor;
             g.FillRectangle(color, _position.X, _position.Y, _size.Width, _size.Height);
-            g.DrawString(_text, StringResources.FontName, ColorResources.ButtonTextColor, _position.X + 13, _position.Y - 2,
-                NumericConstants.ButtonFontSize);
+            g.DrawString(_text, StringResources.FontName, ColorResources.ButtonTextColor,
+                _position.X + _textAlign, _position.Y - 2, NumericConstants.ButtonFontSize);
         }
     }
 }

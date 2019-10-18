@@ -7,7 +7,7 @@ namespace DoubleCommander.Views
 {
     public class MessageView : View
     {
-        private readonly OkButton _okButton;
+        private readonly Button _okButton;
         private readonly string _message;
 
         public MessageView(string message, View parent = null)
@@ -21,8 +21,8 @@ namespace DoubleCommander.Views
             {
                 _message = _message.Insert(50 * i + i, "\n");
             }
-            _okButton = new OkButton(new Point(Position.X + Size.Width / 2 - NumericConstants.ButtonWidth / 2,
-                                               Position.Y + Size.Height - 40))
+            _okButton = new Button(StringResources.OkButtonText, NumericConstants.ButtonOkTextAlign, 
+                new Point(Position.X + Size.Width / 2 - NumericConstants.ButtonWidth / 2, Position.Y + Size.Height - 40))
             { Selected = true };
             if (Parent != null)
             {

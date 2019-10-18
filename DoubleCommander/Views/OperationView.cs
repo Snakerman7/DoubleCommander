@@ -20,8 +20,8 @@ namespace DoubleCommander.Views
     {
         private readonly ProgressBar _progressBar;
         private readonly OperationType _type;
-        private readonly OkButton _okButton;
-        private readonly CancelButton _cancelButton;
+        private readonly Button _okButton;
+        private readonly Button _cancelButton;
         private readonly string _sourcePath;
         private readonly string _destPath;
 
@@ -34,8 +34,10 @@ namespace DoubleCommander.Views
             if (Parent != null)
                 parent.Enabled = false;
             _progressBar = new ProgressBar(new Point(Position.X + 10, Position.Y + 60), new Size(30, Size.Width - 20));
-            _okButton = new OkButton(new Point(Position.X + 50, Position.Y + 150)) { Selected = true };
-            _cancelButton = new CancelButton(new Point(Position.X + Size.Width - 150, Position.Y + 150));
+            _okButton = new Button(StringResources.OkButtonText, NumericConstants.ButtonOkTextAlign, 
+                new Point(Position.X + 50, Position.Y + 150)) { Selected = true };
+            _cancelButton = new Button(StringResources.CancelButtonText, NumericConstants.ButtonCancelTextAlign, 
+                new Point(Position.X + Size.Width - 150, Position.Y + 150));
         }
 
         public override void OnKeyDown(KeyEventArgs e)

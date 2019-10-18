@@ -60,7 +60,7 @@
     <Compile Include="Resources\ColorResources.cs" />
     <Compile Include="Resources\NumericConstants.cs" />
     <Compile Include="Resources\StringResources.cs" />
-    <Compile Include="Views\CancelButton.cs" />
+    <Compile Include="Views\Button.cs" />
     <Compile Include="Views\CreateFolderView.cs" />
     <Compile Include="Views\DoublePanelView.cs" />
     <Compile Include="Views\DrawableBox.cs" />
@@ -73,7 +73,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Common\Size.cs" />
     <Compile Include="Views\MessageView.cs" />
-    <Compile Include="Views\OkButton.cs" />
     <Compile Include="Views\OperationView.cs" />
     <Compile Include="Views\ProgressBar.cs" />
     <Compile Include="Views\PropertiesView.cs" />

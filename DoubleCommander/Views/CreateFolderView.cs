@@ -13,16 +13,18 @@ namespace DoubleCommander.Views
     {
         private readonly string _path;
         private readonly TextBox _textBox;
-        private readonly OkButton _okButton;
-        private readonly CancelButton _cancelButton;
+        private readonly Button _okButton;
+        private readonly Button _cancelButton;
 
         public CreateFolderView(string path, Point position, View parent = null)
             : base(position, new Size(NumericConstants.WindowHeight, NumericConstants.WindowWidth), parent)
         {
             _path = path;
             _textBox = new TextBox(new Point(Position.X + 10, Position.Y + 40), new Size(20, Size.Width - 20));
-            _okButton = new OkButton(new Point(Position.X + 25, Position.Y + 100)) { Selected = true };
-            _cancelButton = new CancelButton(new Point(Position.X + Size.Width - 125, Position.Y + 100));
+            _okButton = new Button(StringResources.OkButtonText, NumericConstants.ButtonOkTextAlign, 
+                new Point(Position.X + 25, Position.Y + 100)) { Selected = true };
+            _cancelButton = new Button(StringResources.CancelButtonText, NumericConstants.ButtonCancelTextAlign, 
+                new Point(Position.X + Size.Width - 125, Position.Y + 100));
             if (Parent != null)
                 Parent.Enabled = false;
         }

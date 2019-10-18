@@ -13,7 +13,7 @@ namespace DoubleCommander.Views
         private readonly string _labels;
         private readonly string _infoText;
         private readonly FileSystemItem _fsItem;
-        private readonly OkButton _okButton;
+        private readonly Button _okButton;
 
         public PropertiesView(FileSystemItem fsItem, Point position, View parent = null)
             : base(position, new Size(NumericConstants.PropertiesViewHeight, NumericConstants.PropertiesViewWidth), parent)
@@ -23,7 +23,7 @@ namespace DoubleCommander.Views
             {
                 Parent.Enabled = false;
             }
-            _okButton = new OkButton(new Point(Position.X + Size.Width / 2 - NumericConstants.ButtonWidth / 2,
+            _okButton = new Button(StringResources.OkButtonText, 35, new Point(Position.X + Size.Width / 2 - NumericConstants.ButtonWidth / 2,
                                                Position.Y + Size.Height - 40))
             { Selected = true };
             _labels = LoadLabels();
