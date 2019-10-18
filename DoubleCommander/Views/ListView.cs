@@ -24,6 +24,7 @@ namespace DoubleCommander.Views
         private readonly Point _itemsStartPosition;
         public FileSystemViewer FSViewer { get; } = new FileSystemViewer();
         public FileSystemItem SelectedItem => FSViewer.Items[SelectedIndex];
+        private string _drawingPath = null;
 
         public ListView(Point position, Size size, View parent)
             : base(position, size, parent)
@@ -57,7 +58,8 @@ namespace DoubleCommander.Views
                                     Position.X + Size.Width, Position.Y + NumericConstants.ListViewItemHeight, 2);
             g.DrawLine(ColorResources.AppBackground, Position.X, Size.Height - NumericConstants.ListViewItemHeight,
                                     Position.X + Size.Width, Size.Height - NumericConstants.ListViewItemHeight, 2);
-            g.DrawString(FSViewer.CurrentPath, StringResources.FontName, ColorResources.ListItemTextColor,
+
+            g.DrawString(_drawingPath, StringResources.FontName, ColorResources.ListItemTextColor,
                 Position.X, Position.Y, NumericConstants.FontSize);
             g.DrawString($"{SelectedIndex + 1}/{this._items.Count}", StringResources.FontName, ColorResources.ListItemTextColor,
                 Position.X + 22, Size.Height - NumericConstants.ListViewItemHeight + 3, NumericConstants.FontSize);
@@ -204,6 +206,10 @@ namespace DoubleCommander.Views
             }
             newItems[SelectedIndex].Selected = true;
             _items = newItems;
+            string shortPath = FSViewer.CurrentPath.Length > 45 ?
+                StringResources.LongFileNameEnd + FSViewer.CurrentPath.Substring(FSViewer.CurrentPath.Length - 40, 40) :
+                FSViewer.CurrentPath;
+            _drawingPath = shortPath;
         }
     }
 }
