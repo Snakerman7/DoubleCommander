@@ -17,7 +17,6 @@ namespace DoubleCommander.Core
         public static event Action<PaintEventArgs> PaintEvent;
         public static event Action<KeyDownEventArgs> KeyDownEvent;
         public static event Action UpdateEvent;
-        private static bool _working = true;
         private static readonly Task _painter = new Task(Paint);
         private static readonly Task _keyListener = new Task(ListenKeys);
         public static ConsoleGraphics Graphics { get; } = new ConsoleGraphics();
@@ -47,11 +46,6 @@ namespace DoubleCommander.Core
             _keyListener.Start();
         }
 
-        public static void Stop()
-        {
-            _working = false;
-        }
-
         public static void Join()
         {
             Task.WaitAny(_painter, _keyListener);
@@ -59,7 +53,7 @@ namespace DoubleCommander.Core
 
         private static void Paint()
         {
-            while (_working)
+            while (true)
             {
                 Graphics.FillRectangle(ColorResources.AppBackground, 0, 0, Graphics.ClientWidth, Graphics.ClientHeight);
                 PaintEvent?.Invoke(new PaintEventArgs(Graphics));
@@ -75,7 +69,7 @@ namespace DoubleCommander.Core
             bool isControlKeyDown = false;
             bool isFunctionKeyDown = false;
             bool isLetterKeyDown = false;
-            while (_working)
+            while (true)
             {
                 if (!isControlKeyDown && IsAnyKeyDown(ControlKeys, out var controlKey))
                 {
