@@ -17,8 +17,6 @@ namespace DoubleCommander.Core
         public static event Action<PaintEventArgs> PaintEvent;
         public static event Action<KeyDownEventArgs> KeyDownEvent;
         public static event Action UpdateEvent;
-        private static readonly Task _painter = new Task(Paint);
-        private static readonly Task _keyListener = new Task(ListenKeys);
         public static ConsoleGraphics Graphics { get; } = new ConsoleGraphics();
 
         public static void Subscribe(View view)
@@ -42,13 +40,8 @@ namespace DoubleCommander.Core
 
         public static void Start()
         {
-            _painter.Start();
-            _keyListener.Start();
-        }
-
-        public static void Join()
-        {
-            Task.WaitAny(_painter, _keyListener);
+            Task.Run(ListenKeys);
+            Paint();
         }
 
         private static void Paint()

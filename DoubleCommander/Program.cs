@@ -19,7 +19,6 @@ namespace DoubleCommander
                 new Point(0, 0), 
                 new Size(EventsSender.Graphics.ClientHeight, EventsSender.Graphics.ClientWidth));
             EventsSender.Start();
-            EventsSender.Join();
         }
     }
 }
