@@ -21,7 +21,7 @@ namespace DoubleCommander.Views
 
         public abstract void OnPaint(PaintEventArgs e);
         public abstract void OnKeyDown(KeyDownEventArgs e);
-        public virtual void OnUpdate()
+        public virtual void Update()
         {
             // Override if necessary
         }

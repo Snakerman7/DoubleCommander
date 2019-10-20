@@ -27,7 +27,7 @@ namespace DoubleCommander.Views
                 {
                     string fullName = Path.Combine(_path, _textBox.Text.ToString());
                     Directory.CreateDirectory(fullName);
-                    EventsSender.SendUpdateEvent();
+                    Parent?.Update();
                 }
             }
             catch (Exception ex)

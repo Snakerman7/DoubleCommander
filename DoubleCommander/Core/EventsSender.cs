@@ -16,27 +16,20 @@ namespace DoubleCommander.Core
         public static readonly Keys[] ControlKeys = { Keys.LEFT, Keys.RIGHT, Keys.UP, Keys.DOWN, Keys.BACK, Keys.RETURN, Keys.TAB, Keys.ESCAPE };
         public static event Action<PaintEventArgs> PaintEvent;
         public static event Action<KeyDownEventArgs> KeyDownEvent;
-        public static event Action UpdateEvent;
         public static ConsoleGraphics Graphics { get; } = new ConsoleGraphics();
 
         public static void Subscribe(View view)
         {
             PaintEvent += view.OnPaint;
             KeyDownEvent += view.OnKeyDown;
-            UpdateEvent += view.OnUpdate;
         }
 
         public static void Unsubscribe(View view)
         {
             PaintEvent -= view.OnPaint;
             KeyDownEvent -= view.OnKeyDown;
-            UpdateEvent -= view.OnUpdate;
         }
 
-        public static void SendUpdateEvent()
-        {
-            UpdateEvent?.Invoke();
-        }
 
         public static void Start()
         {

@@ -110,5 +110,12 @@ namespace DoubleCommander.Views
                 return (_rightView.SelectedItem, _leftView.FSViewer.CurrentPath);
             }
         }
+
+        public override void Update()
+        {
+            base.Update();
+            _leftView.Update();
+            _rightView.Update();
+        }
     }
 }

@@ -43,7 +43,7 @@ namespace DoubleCommander.Views
                     _ = new MessageView(ex.Message, Parent);
                     Parent = null;
                 }
-                EventsSender.SendUpdateEvent();
+                Parent?.Update();
             }
             Close();
         }

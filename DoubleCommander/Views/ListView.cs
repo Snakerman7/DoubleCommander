@@ -175,7 +175,7 @@ namespace DoubleCommander.Views
             }
         }
 
-        public override void OnUpdate()
+        public override void Update()
         {
             FSViewer.UpdateItems();
             Update(false);

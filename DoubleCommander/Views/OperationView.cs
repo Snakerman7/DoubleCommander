@@ -107,7 +107,7 @@ namespace DoubleCommander.Views
                     MoveDirectory();
                     break;
             }
-            EventsSender.SendUpdateEvent();
+            Parent?.Parent?.Update();
         }
 
         private void MoveDirectory()
