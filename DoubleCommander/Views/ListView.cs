@@ -87,20 +87,20 @@ namespace DoubleCommander.Views
                 {
                     Back();
                 }
-                if (e.Key == Keys.F3)
+                if (e.Key == Keys.F4)
                 {
                     FSViewer.GoToFolder(string.Empty);
                     Update(true);
                 }
-                if (e.Key == Keys.F4)
+                if (e.Key == Keys.F5)
                 {
                     OpenPropertiesView();
                 }
-                if (e.Key == Keys.F5)
+                if (e.Key == Keys.F6)
                 {
                     OpenRenameView();
                 }
-                if (e.Key == Keys.F6)
+                if (e.Key == Keys.F7)
                 {
                     OpenCreateFolderView();
                 }

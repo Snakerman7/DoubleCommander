@@ -8,16 +8,16 @@ using System.IO;
 
 namespace DoubleCommander.Views
 {
-    public enum OperationType
-    {
-        CopyFile,
-        MoveFile,
-        CopyDirectory,
-        MoveDirectory
-    }
-
     public class OperationView : View
     {
+        public enum OperationType
+        {
+            CopyFile,
+            MoveFile,
+            CopyDirectory,
+            MoveDirectory
+        }
+
         private readonly ProgressBar _progressBar;
         private readonly OperationType _type;
         private readonly Button _okButton;

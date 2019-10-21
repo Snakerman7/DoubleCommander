@@ -4,15 +4,18 @@ using DoubleCommander.FileSystem;
 using DoubleCommander.Resources;
 using NConsoleGraphics;
 using System.IO;
-using System.Linq;
 
 namespace DoubleCommander.Views
 {
     public class DoublePanelView : View
     {
+        private enum Operation { Copy, Move, None }
+
         private readonly ListView _leftView;
         private readonly ListView _rightView;
         private readonly HelpTextBar _helpBar;
+        private Operation _operation = Operation.None;
+        private FileSystemItem _operationSourceItem;
 
         public DoublePanelView(Point position, Size size, View parent = null)
             : base(position, size, parent)
@@ -39,11 +42,30 @@ namespace DoubleCommander.Views
                 }
                 if (e.Key == Keys.F1)
                 {
-                    CopyOperation();
+                    _operationSourceItem = GetSourceItem();
+                    if (_operationSourceItem != null)
+                        _operation = Operation.Copy;
                 }
                 if (e.Key == Keys.F2)
                 {
-                    MoveOperation();
+                    _operationSourceItem = GetSourceItem();
+                    if (_operationSourceItem != null)
+                        _operation = Operation.Move;
+                }
+                if(e.Key == Keys.F3)
+                {
+                    switch (_operation)
+                    {
+                        case Operation.Copy:
+                            StartOperation();
+                            break;
+                        case Operation.Move:
+                            StartOperation();
+                            _operation = Operation.None;
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
         }
@@ -53,9 +75,9 @@ namespace DoubleCommander.Views
             _helpBar.Draw(e.Graphics);
         }
 
-        private void CopyOperation()
+        private void StartOperation()
         {
-            var (source, destPath) = GetOperationParameters();
+            string destPath = GetDestinationPath();
             if (destPath == string.Empty)
             {
                 return;
@@ -63,51 +85,56 @@ namespace DoubleCommander.Views
             View activeView = _leftView.Enabled ? _leftView : _rightView;
             Point viewPosition = new Point(Size.Width / 2 - NumericConstants.OperationViewWidth / 2,
                                            Size.Height / 2 - NumericConstants.OperationViewHeight / 2);
-            switch (source)
+            switch (_operationSourceItem)
             {
                 case FileItem file:
-                    _ = new OperationView(OperationType.CopyFile, file.FullName,
+                    OperationView.OperationType fileOperationType = _operation == Operation.Copy ?
+                        OperationView.OperationType.CopyFile : OperationView.OperationType.MoveFile;
+                    _ = new OperationView(fileOperationType, file.FullName,
                         Path.Combine(destPath, file.NameWithExtension), viewPosition, activeView);
                     break;
                 case DirectoryItem dir:
-                    _ = new OperationView(OperationType.CopyDirectory, dir.FullName,
+                    OperationView.OperationType dirOperationType = _operation == Operation.Copy ?
+                        OperationView.OperationType.CopyDirectory : OperationView.OperationType.MoveDirectory;
+                    _ = new OperationView(dirOperationType, dir.FullName,
                         Path.Combine(destPath, dir.Name), viewPosition, activeView);
                     break;
             }
         }
 
-        private void MoveOperation()
-        {
-            var (source, destPath) = GetOperationParameters();
-            if (destPath == string.Empty)
-            {
-                return;
-            }
-            View activeView = _leftView.Enabled ? _leftView : _rightView;
-            Point viewPosition = new Point(Size.Width / 2 - NumericConstants.OperationViewWidth / 2,
-                                           Size.Height / 2 - NumericConstants.OperationViewHeight / 2);
-            switch (source)
-            {
-                case FileItem file:
-                    _ = new OperationView(OperationType.MoveFile, file.FullName,
-                        Path.Combine(destPath, file.NameWithExtension), viewPosition, activeView);
-                    break;
-                case DirectoryItem dir:
-                    _ = new OperationView(OperationType.MoveDirectory, dir.FullName,
-                        Path.Combine(destPath, dir.Name), viewPosition, activeView);
-                    break;
-            }
-        }
-
-        private (FileSystemItem source, string destPath) GetOperationParameters()
+        private FileSystemItem GetSourceItem()
         {
             if (_leftView.Enabled)
             {
-                return (_leftView.SelectedItem, _rightView.FSViewer.CurrentPath);
+                return CheckSourceItem(_leftView.SelectedItem);
             }
             else
             {
-                return (_rightView.SelectedItem, _leftView.FSViewer.CurrentPath);
+                return CheckSourceItem(_rightView.SelectedItem);
+            }
+        }
+
+        private string GetDestinationPath()
+        {
+            if (_leftView.Enabled)
+            {
+                return _leftView.FSViewer.CurrentPath;
+            }
+            else
+            {
+                return _rightView.FSViewer.CurrentPath;
+            }
+        }
+
+        private static FileSystemItem CheckSourceItem(FileSystemItem item)
+        {
+            if(item is FileItem || item is DirectoryItem)
+            {
+                return item;
+            }
+            else
+            {
+                return null;
             }
         }
 

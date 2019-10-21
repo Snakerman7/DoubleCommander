@@ -16,7 +16,7 @@ namespace DoubleCommander.Resources
         public const string NewFolderViewTitle = "New folder";
         public const string RenameViewTitle = "Rename: ";
         public const string HelpText =
-            "F1 : Copy | F2 : Move | F3 : List of disks | F4 : Properties | F5 : Rename | F6 : New folder";
+            "F1 : Copy | F2 : Cut | F3 : Paste | F4 : List of disks | F5 : Properties | F6 : Rename | F7 : New folder";
         public const string OkButtonText = "Ok";
         public const string CancelButtonText = "Cancel";
         public static readonly char[] Letters = Enumerable.Range('a', 'z' - 'a' + 1).Select(i => (char)i).ToArray();
