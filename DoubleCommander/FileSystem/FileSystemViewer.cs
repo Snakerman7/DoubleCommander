@@ -3,7 +3,6 @@ using GenericCollections;
 using System;
 using System.IO;
 using System.Linq;
-using System.Security.AccessControl;
 
 namespace DoubleCommander.FileSystem
 {
@@ -23,6 +22,8 @@ namespace DoubleCommander.FileSystem
         public void UpdateItems()
         {
             Items.Clear();
+            if (CurrentPath != string.Empty)
+                Items.Add(new FileSystemItem(StringResources.BackPath));
             foreach (var item in GetDirectoryContent())
             {
                 Items.Add(item);
@@ -33,15 +34,8 @@ namespace DoubleCommander.FileSystem
         {
             if (CurrentPath != string.Empty)
             {
-                return new FileSystemItem[] { new FileSystemItem(StringResources.BackPath) }
-                .Concat(Directory.GetDirectories(CurrentPath)
-                                .Select(path => new DirectoryInfo(path))
-                                .Select(dir =>
-                                    new DirectoryItem(dir.FullName)))
-                .Concat(Directory.GetFiles(CurrentPath)
-                                .Select(path => new FileInfo(path))
-                                .Select(file =>
-                                    new FileItem(file.FullName, file.Length)));
+                return Directory.EnumerateDirectories(CurrentPath).Select<string, FileSystemItem>(dirPath => new DirectoryItem(dirPath))
+                    .Concat(Directory.EnumerateFiles(CurrentPath).Select(filePath => new FileItem(filePath, new FileInfo(filePath).Length)));
             }
             else
             {
