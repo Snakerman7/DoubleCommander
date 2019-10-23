@@ -24,9 +24,18 @@ namespace DoubleCommander.FileSystem
             Items.Clear();
             if (CurrentPath != string.Empty)
                 Items.Add(new FileSystemItem(StringResources.BackPath));
-            foreach (var item in GetDirectoryContent())
+            try
             {
-                Items.Add(item);
+                foreach (var item in GetDirectoryContent())
+                {
+                    Items.Add(item);
+                }
+            }
+            catch (IOException) { }
+            catch (System.Security.SecurityException) { }
+            catch (UnauthorizedAccessException)
+            {
+                throw;
             }
         }
 
@@ -66,18 +75,6 @@ namespace DoubleCommander.FileSystem
                 CurrentPath = path;
             }
             UpdateItems();
-        }
-
-        public static string CheckFile(string filePath)
-        {
-            string name = Path.GetFileName(filePath);
-            string path = Path.GetDirectoryName(filePath);
-            int i = 1;
-            while (File.Exists(filePath))
-            {
-                filePath = Path.Combine(path, name.Insert(name.LastIndexOf('.'), $"(Copy{i++})"));
-            }
-            return filePath;
         }
 
         public static string BytesToString(long byteCount)

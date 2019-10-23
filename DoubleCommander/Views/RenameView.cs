@@ -1,11 +1,7 @@
 ﻿using DoubleCommander.Common;
-using DoubleCommander.Core;
 using DoubleCommander.FileSystem;
-using DoubleCommander.Resources;
-using NConsoleGraphics;
-using System.Linq;
-using System.IO;
 using System;
+using System.IO;
 
 namespace DoubleCommander.Views
 {
@@ -38,14 +34,27 @@ namespace DoubleCommander.Views
                             break;
                     }
                 }
-                catch(Exception ex)
+                catch(IOException ex)
                 {
-                    _ = new MessageView(ex.Message, Parent);
-                    Parent = null;
+                    HandleException(ex);
+                }
+                catch (UnauthorizedAccessException ex)
+                {
+                    HandleException(ex);
+                }
+                catch (System.Security.SecurityException ex)
+                {
+                    HandleException(ex);
                 }
                 Parent?.Update();
             }
             Close();
+        }
+
+        private void HandleException(Exception ex)
+        {
+            _ = new MessageView(ex.Message, Parent);
+            Parent = null;
         }
     }
 }

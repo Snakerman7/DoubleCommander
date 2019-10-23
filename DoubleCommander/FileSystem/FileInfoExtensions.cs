@@ -18,6 +18,10 @@ namespace DoubleCommander.FileSystem
 
         public static void CopyTo(this FileInfo file, FileInfo destination, Action<int> progressCallback)
         {
+            if (destination.Exists)
+            {
+                throw new IOException($"File \"{destination.FullName}\" already exists");
+            }
             const int bufferSize = 1024 * 1024;  //1MB
             byte[] buffer = new byte[bufferSize], buffer2 = new byte[bufferSize];
             bool swap = false;
@@ -25,22 +29,42 @@ namespace DoubleCommander.FileSystem
             long len = file.Length;
             float flen = len;
             Task writer = null;
+
             using (var source = file.OpenRead())
             using (var dest = destination.OpenWrite())
             {
-                dest.SetLength(source.Length);
-                int read;
-                for (long size = 0; size < len; size += read)
+                try
                 {
-                    int progress;
-                    if ((progress = ((int)((size / flen) * 100))) != reportedProgress)
-                        progressCallback(reportedProgress = progress);
-                    read = source.Read(swap ? buffer : buffer2, 0, bufferSize);
-                    writer?.Wait();
-                    writer = dest.WriteAsync(swap ? buffer : buffer2, 0, read);
-                    swap = !swap;
+                    dest.SetLength(source.Length);
                 }
-                writer?.Wait();
+                catch (IOException)
+                {
+                    dest.Close();
+                    destination.Delete();
+                    throw;
+                }
+                int read;
+                try
+                {
+                    for (long size = 0; size < len; size += read)
+                    {
+                        int progress;
+                        if ((progress = ((int)((size / flen) * 100))) != reportedProgress)
+                            progressCallback(reportedProgress = progress);
+                        read = source.Read(swap ? buffer : buffer2, 0, bufferSize);
+                        writer?.Wait();
+                        writer = dest.WriteAsync(swap ? buffer : buffer2, 0, read);
+                        swap = !swap;
+                    }
+                    writer?.Wait();
+                }
+                catch (AggregateException ex)
+                {
+                    if (ex.InnerException is IOException ioEx)
+                    {
+                        throw ioEx;
+                    }
+                }
             }
         }
     }

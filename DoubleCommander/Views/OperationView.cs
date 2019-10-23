@@ -34,9 +34,10 @@ namespace DoubleCommander.Views
             if (Parent != null)
                 parent.Enabled = false;
             _progressBar = new ProgressBar(new Point(Position.X + 10, Position.Y + 60), new Size(30, Size.Width - 20));
-            _okButton = new Button(StringResources.OkButtonText, NumericConstants.ButtonOkTextAlign, 
-                new Point(Position.X + 50, Position.Y + 150)) { Selected = true };
-            _cancelButton = new Button(StringResources.CancelButtonText, NumericConstants.ButtonCancelTextAlign, 
+            _okButton = new Button(StringResources.OkButtonText, NumericConstants.ButtonOkTextAlign,
+                new Point(Position.X + 50, Position.Y + 150))
+            { Selected = true };
+            _cancelButton = new Button(StringResources.CancelButtonText, NumericConstants.ButtonCancelTextAlign,
                 new Point(Position.X + Size.Width - 150, Position.Y + 150));
         }
 
@@ -92,99 +93,79 @@ namespace DoubleCommander.Views
 
         private void Action()
         {
-            switch (_type)
+            try
             {
-                case OperationType.CopyFile:
-                    CopyFile();
-                    break;
-                case OperationType.MoveFile:
-                    MoveFile();
-                    break;
-                case OperationType.CopyDirectory:
-                    CopyDirectory();
-                    break;
-                case OperationType.MoveDirectory:
-                    MoveDirectory();
-                    break;
+                switch (_type)
+                {
+                    case OperationType.CopyFile:
+                        CopyFile();
+                        break;
+                    case OperationType.MoveFile:
+                        MoveFile();
+                        break;
+                    case OperationType.CopyDirectory:
+                        CopyDirectory();
+                        break;
+                    case OperationType.MoveDirectory:
+                        MoveDirectory();
+                        break;
+                }
+                Parent?.Parent?.Update();
             }
-            Parent?.Parent?.Update();
+            catch (IOException ex)
+            {
+                HandleException(ex);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                HandleException(ex);
+            }
+            catch (System.Security.SecurityException ex)
+            {
+                HandleException(ex);
+            }
         }
 
         private void MoveDirectory()
         {
-            try
+            if (Path.GetPathRoot(_sourcePath) == Path.GetPathRoot(_destPath))
             {
-                if (Path.GetPathRoot(_sourcePath) == Path.GetPathRoot(_destPath))
-                {
-                    Directory.Move(_sourcePath, _destPath);
-                    UpdateProgress(100);
-                }
-                else
-                {
-                    CopyDirectory();
-                    Directory.Delete(_sourcePath, true);
-                }
+                Directory.Move(_sourcePath, _destPath);
+                UpdateProgress(100);
             }
-            catch (Exception ex)
+            else
             {
-                _ = new MessageView(ex.Message, Parent);
-                Parent = null;
+                CopyDirectory();
+                Directory.Delete(_sourcePath, true);
             }
         }
 
         private void CopyDirectory()
         {
-            try
-            {
-                DirectoryInfo sourceDir = new DirectoryInfo(_sourcePath);
-                sourceDir.CopyTo(_destPath, UpdateProgress);
-            }
-            catch (Exception ex)
-            {
-                _ = new MessageView(ex.Message, Parent);
-                Parent = null;
-            }
+            DirectoryInfo sourceDir = new DirectoryInfo(_sourcePath);
+            sourceDir.CopyTo(_destPath, UpdateProgress);
         }
 
         private void CopyFile()
         {
-            try
-            {
-                if (!File.Exists(_destPath))
-                {
-                    FileInfo sourceFile = new FileInfo(_sourcePath);
-                    sourceFile.CopyTo(_destPath, UpdateProgress);
-                }
-            }
-            catch (Exception ex)
-            {
-                _ = new MessageView(ex.Message, Parent);
-                Parent = null;
-            }
+            FileInfo sourceFile = new FileInfo(_sourcePath);
+            sourceFile.CopyTo(_destPath, UpdateProgress);
         }
 
         private void MoveFile()
         {
-            try
+            if (Path.GetPathRoot(_sourcePath) == Path.GetPathRoot(_destPath))
             {
-                if (Path.GetPathRoot(_sourcePath) == Path.GetPathRoot(_destPath))
+                if (!File.Exists(_destPath))
                 {
-                    if (!File.Exists(_destPath))
-                    {
-                        File.Move(_sourcePath, _destPath);
-                        UpdateProgress(100);
-                    }
-                }
-                else
-                {
-                    CopyFile();
-                    File.Delete(_sourcePath);
+                    File.Move(_sourcePath, _destPath);
+                    UpdateProgress(100);
                 }
             }
-            catch(Exception ex)
+            else
             {
-                _ = new MessageView(ex.Message, Parent);
-                Parent = null;
+                CopyFile();
+                File.Delete(_sourcePath);
             }
         }
 
@@ -204,6 +185,12 @@ namespace DoubleCommander.Views
             base.Close();
             if (Parent != null)
                 Parent.Enabled = true;
+        }
+
+        private void HandleException(Exception ex)
+        {
+            _ = new MessageView(ex.Message, Parent);
+            Parent = null;
         }
     }
 }

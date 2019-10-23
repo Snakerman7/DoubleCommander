@@ -135,10 +135,18 @@ namespace DoubleCommander.Views
                         break;
                 }
             }
-            catch (Exception ex)
+            catch (UnauthorizedAccessException ex)
             {
-                _ = new MessageView(ex.Message, this);
+                HandleException(ex);
                 FSViewer.GoToFolder(StringResources.BackPath);
+            }
+            catch(System.IO.FileNotFoundException ex)
+            {
+                HandleException(ex);
+            }
+            catch(System.ComponentModel.Win32Exception ex)
+            {
+                HandleException(ex);
             }
         }
 
@@ -220,6 +228,11 @@ namespace DoubleCommander.Views
                 StringResources.LongFileNameEnd + FSViewer.CurrentPath.Substring(FSViewer.CurrentPath.Length - 40, 40) :
                 FSViewer.CurrentPath;
             _drawingPath = shortPath;
+        }
+
+        private void HandleException(Exception ex)
+        {
+            _ = new MessageView(ex.Message, this);
         }
     }
 }

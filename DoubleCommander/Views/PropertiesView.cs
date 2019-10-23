@@ -92,12 +92,21 @@ namespace DoubleCommander.Views
                             $"\n{FileSystemViewer.BytesToString(dirInfo.GetDirectorySize())}\n{filesCount}\n{dirsCount}";
                 }
             }
-            catch (Exception ex)
+            catch (IOException ex)
             {
-                Close();
-                _ = new MessageView(ex.Message, Parent);
+                HandleException(ex);
+            }
+            catch(UnauthorizedAccessException ex)
+            {
+                HandleException(ex);
             }
             return string.Empty;
+        }
+
+        private void HandleException(Exception ex)
+        {
+            Close();
+            _ = new MessageView(ex.Message, Parent);
         }
     }
 }

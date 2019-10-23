@@ -21,21 +21,32 @@ namespace DoubleCommander.Views
 
         protected override void Action()
         {
-            try
+
+            if (_okButton.Selected)
             {
-                if (_okButton.Selected)
+                try
                 {
                     string fullName = Path.Combine(_path, _textBox.Text.ToString());
                     Directory.CreateDirectory(fullName);
                     Parent?.Update();
                 }
+                catch (IOException ex)
+                {
+                    HandleException(ex);
+                }
+                catch (UnauthorizedAccessException ex)
+                {
+                    HandleException(ex);
+                }
             }
-            catch (Exception ex)
-            {
-                _ = new MessageView(ex.Message, Parent);
-                Parent = null;
-            }
+
             Close();
+        }
+
+        private void HandleException(Exception ex)
+        {
+            _ = new MessageView(ex.Message, Parent);
+            Parent = null;
         }
     }
 }
